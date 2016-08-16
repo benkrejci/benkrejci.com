@@ -1,0 +1,15 @@
+{
+  "name": "benkrejci.com",
+  "version": "1.0.0",
+  "description": "benkrejci.com web site",
+  "main": "Gruntfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com:benkrejci/benkrejci.com.git"
+  },
+  "author": "Ben Krejci",
+  "license": "ISC"
+}
