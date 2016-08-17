@@ -10,7 +10,7 @@ body {
 
 #splash {
   padding: 4px;
-  background: #000 url(images/icoexplosion.jpg) no-repeat center center;
+  background: #000 url(/images/icoexplosion.jpg) no-repeat center center;
   background-size: auto 100%;
   height: 100%;
   min-height: 600px;
