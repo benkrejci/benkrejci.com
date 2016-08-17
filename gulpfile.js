@@ -4,6 +4,7 @@ const gulpLoadPlugins = require('gulp-load-plugins');
 const browserSync = require('browser-sync');
 const del = require('del');
 const wiredep = require('wiredep').stream;
+const path = require('path');
 
 const $ = gulpLoadPlugins();
 const reload = browserSync.reload;
@@ -12,6 +13,17 @@ gulp.task('styles', () => {
   return gulp.src('app/styles/*.css')
     .pipe($.sourcemaps.init())
     .pipe($.autoprefixer({browsers: ['> 1%', 'last 2 versions', 'Firefox ESR']}))
+    .pipe($.sourcemaps.write())
+    .pipe(gulp.dest('.tmp/styles'))
+    .pipe(reload({stream: true}));
+});
+
+gulp.task('less', () => {
+  return gulp.src('app/less/**/*.less')
+    .pipe($.sourcemaps.init({
+      paths: [ path.join(__dirname, 'app/less/includes') ]
+    }))
+    .pipe($.less())
     .pipe($.sourcemaps.write())
     .pipe(gulp.dest('.tmp/styles'))
     .pipe(reload({stream: true}));
@@ -51,9 +63,12 @@ gulp.task('lint:test', () => {
     .pipe(gulp.dest('test/spec/**/*.js'));
 });
 
-gulp.task('html', ['styles', 'scripts'], () => {
+gulp.task('html', ['styles', 'less', 'scripts'], () => {
   return gulp.src('app/*.html')
-    .pipe($.useref({searchPath: ['.tmp', 'app', '.']}))
+    .pipe($.useref({
+      searchPath: ['.tmp', 'app', '.'],
+      types: ['js', 'css']
+    }))
     .pipe($.if('*.js', $.uglify()))
     .pipe($.if('*.css', $.cssnano({safe: true, autoprefixer: false})))
     .pipe($.if('*.html', $.htmlmin({collapseWhitespace: true})))
@@ -93,7 +108,7 @@ gulp.task('extras', () => {
 
 gulp.task('clean', del.bind(null, ['.tmp', 'dist']));
 
-gulp.task('serve', ['styles', 'scripts', 'images', 'fonts'], () => {
+gulp.task('serve', ['styles', 'less', 'scripts', 'images', 'fonts'], () => {
   browserSync({
     notify: false,
     port: 9000,
@@ -112,6 +127,7 @@ gulp.task('serve', ['styles', 'scripts', 'images', 'fonts'], () => {
   ]).on('change', reload);
 
   gulp.watch('app/styles/**/*.css', ['styles']);
+  gulp.watch('app/less/**/*.less', ['less']);
   gulp.watch('app/scripts/**/*.js', ['scripts']);
   gulp.watch('app/images/**/*', ['images']);
   gulp.watch('app/fonts/**/*', ['fonts']);
