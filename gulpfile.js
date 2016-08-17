@@ -9,10 +9,14 @@ const path = require('path');
 const $ = gulpLoadPlugins();
 const reload = browserSync.reload;
 
+const process = require('process');
+
+const CSS_AUTOPREFIXER_BROWSERS = ['> 1%', 'last 2 versions', 'Firefox ESR'];
+
 gulp.task('styles', () => {
   return gulp.src('app/styles/*.css')
     .pipe($.sourcemaps.init())
-    .pipe($.autoprefixer({browsers: ['> 1%', 'last 2 versions', 'Firefox ESR']}))
+    .pipe($.autoprefixer({browsers: CSS_AUTOPREFIXER_BROWSERS}))
     .pipe($.sourcemaps.write())
     .pipe(gulp.dest('.tmp/styles'))
     .pipe(reload({stream: true}));
@@ -20,13 +24,8 @@ gulp.task('styles', () => {
 
 gulp.task('less', () => {
   return gulp.src('app/less/**/*.less')
-    .pipe($.sourcemaps.init({
-      paths: [ path.join(__dirname, 'app/less/includes') ]
-    }))
-    .pipe($.less())
-    .pipe($.sourcemaps.write())
-    .pipe(gulp.dest('.tmp/styles'))
-    .pipe(reload({stream: true}));
+    .pipe(gulp.dest('.tmp/less'))
+    .pipe(reload({stream: true }));
 });
 
 gulp.task('scripts', () => {
@@ -63,13 +62,20 @@ gulp.task('lint:test', () => {
     .pipe(gulp.dest('test/spec/**/*.js'));
 });
 
-gulp.task('html', ['styles', 'less', 'scripts'], () => {
+gulp.task('html', ['styles', 'scripts'], () => {
   return gulp.src('app/*.html')
     .pipe($.useref({
       searchPath: ['.tmp', 'app', '.'],
-      types: ['js', 'css']
+      types: ['js', 'css', 'less'],
+      less: function (content, target, options, alternateSearchPath) {
+        return '<link rel="stylesheet" href="' + target + '" />';
+      }
     }))
     .pipe($.if('*.js', $.uglify()))
+    .pipe($.if('*.less', $.less({
+      paths: [ path.join(__dirname, 'app/less/includes') ]
+    })))
+    .pipe($.if('*.css', $.autoprefixer({browsers: CSS_AUTOPREFIXER_BROWSERS})))
     .pipe($.if('*.css', $.cssnano({safe: true, autoprefixer: false})))
     .pipe($.if('*.html', $.htmlmin({collapseWhitespace: true})))
     .pipe(gulp.dest('dist'));
@@ -122,8 +128,9 @@ gulp.task('serve', ['styles', 'less', 'scripts', 'images', 'fonts'], () => {
 
   gulp.watch([
     'app/*.html',
+    '.tmp/less/**/*.less',
     '.tmp/images/**/*',
-    '.tmp/fonts/**/*'
+    '.tmp/fonts/**/*',
   ]).on('change', reload);
 
   gulp.watch('app/styles/**/*.css', ['styles']);

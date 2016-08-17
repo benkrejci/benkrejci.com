@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>BenKrejci.com</title>
 
-    <link rel="icon" type="image/png" href="images/favicon.png">
+    <link rel="icon" type="image/png" href="images/favicon.png" />
 
     <!-- build:css styles/vendor.css -->
     <!-- bower:css -->
@@ -17,12 +17,9 @@
     <!-- endbower -->
     <!-- endbuild -->
 
-    <!-- build:remove -->
-    <script src="/bower_components/less/dist/less.js"></script>
-    <!-- endbuild -->
-
-    <!-- build:css styles/index.css -->
-    <link rel="stylesheet" href="styles/index.css">
+    <!-- build:less styles/index.css -->
+    <link rel="stylesheet/less" href="less/index.less" />
+    <link rel="stylesheet/less" href="less/spin-hover.less" />
     <!-- endbuild -->
     
     <!-- build:js scripts/vendor/modernizr.js -->
@@ -33,6 +30,7 @@
     <!--[if lt IE 10]>
       <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
+
 
     <div id="splash">
       <div class="btn-toolbar pull-left" role="toolbar">
@@ -46,7 +44,6 @@
     </div>
 
     
-    <!-- Google Analytics -->
     <script>
       (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
       function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
