@@ -18,11 +18,8 @@
     <!-- endbuild -->
 
     <!-- build:less styles/index.css -->
-    <link rel="stylesheet/less" type="text/css" href="less/index.less" />
-    <link rel="stylesheet/less" type="text/css" href="less/spin-hover.less" />
-    <!-- endbuild -->
-    <!-- build:remove -->
-    <script src="/bower_components/less/dist/less.js" data-env="development" data-dump-line-numbers="comments"></script>
+    <link rel="stylesheet/less" href="less/index.less" />
+    <link rel="stylesheet/less" href="less/spin-hover.less" />
     <!-- endbuild -->
     
     <!-- build:js scripts/vendor/modernizr.js -->
@@ -35,7 +32,8 @@
     <![endif]-->
 
 
-    <div id="splash">
+    <div id="splash-background"><img src="images/icoexplosion.jpg" /></div>
+    <div id="splash-foreground">
       <div class="btn-toolbar pull-left" role="toolbar">
         <a class="btn btn-social-icon btn-lg btn-github spin-hover" href="https://github.com/benkrejci" target="_blank"><span class="fa fa-github"></span></a>
         <a class="btn btn-social-icon btn-lg btn-linkedin spin-hover" href="https://www.linkedin.com/in/ben-krejci" target="_blank"><span class="fa fa-linkedin"></span></a>
@@ -60,6 +58,10 @@
     <!-- bower:js -->
     <script src="/bower_components/jquery/dist/jquery.js"></script>
     <!-- endbower -->
+    <!-- endbuild -->
+
+    <!-- build:js scripts/index.js -->
+    <script src="scripts/index.js"></script>
     <!-- endbuild -->
   </body>
 </html>
