@@ -1,5 +1,5 @@
 'use strict';
-
+console.log('-1')
 $(function () {
   var ALLOWED_IMAGE_OVERLAP_X = 0.5;
   var ALLOWED_IMAGE_OVERLAP_Y = 0.75;
@@ -22,6 +22,7 @@ $(function () {
       var heightScale = windowHeight / resizeHeight;
       var width = imageWidth;
       var height = imageHeight;
+
       if (widthScale < 1 && widthScale < heightScale) {
         width *= widthScale;
         height *= widthScale;
@@ -32,7 +33,6 @@ $(function () {
 
       var left = Math.round( ( windowWidth  - width  ) / 2 );
       var top  = Math.round( ( windowHeight - height ) / 2 );
-
       $splashImage
         .css({
           width: width + 'px',
@@ -44,5 +44,9 @@ $(function () {
     setSplashImageSize();
     $window.on('resize', setSplashImageSize);
   }
-  $splashImage.get(0).isComplete && onLoad() || $splashImage.on('load', onLoad);
+  if ($splashImage.get(0).complete) {
+    onLoad();
+  } else {
+    $splashImage.on('load', onLoad);
+  }
 });
