@@ -1,13 +1,16 @@
-@background-color: #fff;
+@color-background: #fff;
+@color-text: #333;
+@color-text-light: #999;
 
-html, body {
+html {
   height: 100%;
   padding: 0;
   margin: 0;
 }
 
-body {
-  background-color: @background-color;
+body:extend(html) {
+  background-color: @color-background;
+  color: @color-text;
 }
 
 .fade-in(@delay: 0.5s) {
@@ -25,6 +28,17 @@ body {
   width: 100%;
   height: 100%;
   overflow: hidden;
+}
+
+#splash-loading {
+  .full-size;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  color: @color-text-light;
+  font-variant: small-caps;
 }
 
 #splash-background {
