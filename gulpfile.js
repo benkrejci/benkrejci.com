@@ -68,7 +68,7 @@ gulp.task('html', ['styles', 'scripts'], () => {
       searchPath: ['.tmp', 'app', '.'],
       types: ['js', 'css', 'less'],
       less: function (content, target, options, alternateSearchPath) {
-        return '<link rel="stylesheet" href="' + target + '" />';
+        return '<link rel="stylesheet" href="' + target.replace(/\.less$/, '.css') + '" />';
       }
     }))
     .pipe($.if('*.js', $.uglify()))
