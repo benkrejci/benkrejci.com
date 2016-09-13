@@ -1,5 +1,4 @@
 'use strict';
-console.log('-1')
 $(function () {
   var ALLOWED_IMAGE_OVERLAP_X = 0.5;
   var ALLOWED_IMAGE_OVERLAP_Y = 0.75;
