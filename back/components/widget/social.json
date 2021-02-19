@@ -1,0 +1,18 @@
+{
+  "collectionName": "components_widget_socials",
+  "info": {
+    "name": "social",
+    "icon": "users",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "paper": {
+      "type": "boolean",
+      "default": false
+    }
+  }
+}

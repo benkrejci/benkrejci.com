@@ -1,0 +1,31 @@
+{
+  "collectionName": "components_widget_images",
+  "info": {
+    "name": "image",
+    "icon": "file-signature",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "image": {
+      "model": "file",
+      "via": "related",
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos"
+      ],
+      "plugin": "upload",
+      "required": false
+    },
+    "align": {
+      "type": "enumeration",
+      "enum": [
+        "left",
+        "center",
+        "right"
+      ],
+      "default": "center"
+    }
+  }
+}

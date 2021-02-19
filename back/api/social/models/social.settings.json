@@ -1,0 +1,26 @@
+{
+  "kind": "collectionType",
+  "collectionName": "socials",
+  "info": {
+    "name": "social",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "linkedin",
+        "twitter",
+        "soundcloud"
+      ]
+    },
+    "url": {
+      "type": "string"
+    }
+  }
+}

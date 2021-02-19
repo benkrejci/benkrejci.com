@@ -1,0 +1,18 @@
+{
+  "collectionName": "components_widget_rich_texts",
+  "info": {
+    "name": "rich-text",
+    "icon": "align-left",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "content": {
+      "type": "richtext"
+    },
+    "paper": {
+      "type": "boolean",
+      "default": false
+    }
+  }
+}

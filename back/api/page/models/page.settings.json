@@ -1,0 +1,63 @@
+{
+  "kind": "collectionType",
+  "collectionName": "pages",
+  "info": {
+    "name": "page",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "string",
+      "unique": true,
+      "required": true
+    },
+    "topWidgets": {
+      "type": "dynamiczone",
+      "components": [
+        "widget.project-grid",
+        "widget.rich-text",
+        "widget.social",
+        "widget.image"
+      ]
+    },
+    "bottomWidgets": {
+      "type": "dynamiczone",
+      "components": [
+        "widget.project-grid",
+        "widget.rich-text",
+        "widget.social",
+        "widget.image"
+      ]
+    },
+    "leftWidgets": {
+      "type": "dynamiczone",
+      "components": [
+        "widget.project-grid",
+        "widget.rich-text",
+        "widget.social",
+        "widget.image"
+      ]
+    },
+    "rightWidgets": {
+      "type": "dynamiczone",
+      "components": [
+        "widget.project-grid",
+        "widget.rich-text",
+        "widget.social",
+        "widget.image"
+      ]
+    },
+    "socialInNav": {
+      "type": "boolean",
+      "default": true
+    }
+  }
+}

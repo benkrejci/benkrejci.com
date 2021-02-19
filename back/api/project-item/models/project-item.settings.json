@@ -1,0 +1,28 @@
+{
+  "kind": "collectionType",
+  "collectionName": "project_items",
+  "info": {
+    "name": "project-item",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string"
+    },
+    "project": {
+      "model": "project",
+      "via": "project_items"
+    },
+    "description": {
+      "type": "richtext"
+    }
+  }
+}

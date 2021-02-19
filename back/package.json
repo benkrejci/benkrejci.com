@@ -1,0 +1,39 @@
+{
+  "name": "back",
+  "private": true,
+  "version": "0.1.0",
+  "description": "A Strapi application",
+  "scripts": {
+    "develop": "strapi develop",
+    "start": "strapi start",
+    "build": "strapi build",
+    "strapi": "strapi",
+    "setup": "pm2 start npm --name casey.back -- run develop && pm2 save && echo \"pm2 process started. Run `pm2 startup` if you haven't already to start on boot\""
+  },
+  "devDependencies": {},
+  "dependencies": {
+    "knex": "<0.20.0",
+    "pm2": "^4.5.4",
+    "sqlite3": "5.0.0",
+    "strapi": "3.4.6",
+    "strapi-admin": "3.4.6",
+    "strapi-connector-bookshelf": "3.4.6",
+    "strapi-plugin-content-manager": "3.4.6",
+    "strapi-plugin-content-type-builder": "3.4.6",
+    "strapi-plugin-email": "3.4.6",
+    "strapi-plugin-upload": "3.4.6",
+    "strapi-plugin-users-permissions": "3.4.6",
+    "strapi-utils": "3.4.6"
+  },
+  "author": {
+    "name": "A Strapi developer"
+  },
+  "strapi": {
+    "uuid": "2d1d72ee-3428-4d8e-8e5c-9204ecc5a9e4"
+  },
+  "engines": {
+    "node": ">=10.16.0 <=14.x.x",
+    "npm": ">=6.0.0"
+  },
+  "license": "MIT"
+}

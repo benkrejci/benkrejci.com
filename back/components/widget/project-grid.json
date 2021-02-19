@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_widget_project_grids",
+  "info": {
+    "name": "project-grid",
+    "icon": "border-all"
+  },
+  "options": {},
+  "attributes": {
+    "projects": {
+      "collection": "project"
+    }
+  }
+}
