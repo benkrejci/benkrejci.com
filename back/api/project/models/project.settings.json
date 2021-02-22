@@ -30,11 +30,6 @@
     },
     "url": {
       "type": "string"
-    },
-    "projectItems": {
-      "type": "component",
-      "repeatable": true,
-      "component": "project-components.project-items"
     }
   }
 }
