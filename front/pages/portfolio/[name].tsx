@@ -141,7 +141,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   if (projectsResponse.error) throw projectsResponse.error
 
   return {
-    paths: projectsResponse.data.map(getProjectUri),
+    paths: projectsResponse.data?.map(getProjectUri),
     fallback: false,
   }
 }
