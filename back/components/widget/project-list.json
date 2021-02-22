@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_widget_project_lists",
+  "info": {
+    "name": "Project-List",
+    "icon": "align-justify"
+  },
+  "options": {},
+  "attributes": {
+    "projects": {
+      "collection": "project"
+    }
+  }
+}

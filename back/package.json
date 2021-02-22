@@ -8,7 +8,7 @@
     "start": "strapi start",
     "build": "strapi build",
     "strapi": "strapi",
-    "setup": "pm2 start npm --name casey.back -- run develop && pm2 save && echo \"pm2 process started. Run `pm2 startup` if you haven't already to start on boot\""
+    "setup": "pm2 start npm --name ben.back -- run develop && pm2 save && echo \"pm2 process started. Run `pm2 startup` if you haven't already to start on boot\""
   },
   "devDependencies": {},
   "dependencies": {

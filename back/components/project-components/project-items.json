@@ -1,24 +1,22 @@
 {
-  "kind": "collectionType",
-  "collectionName": "projects",
+  "collectionName": "components_project_components_project_items",
   "info": {
-    "name": "project",
+    "name": "projectItems",
+    "icon": "archive",
     "description": ""
   },
-  "options": {
-    "increments": true,
-    "timestamps": true,
-    "draftAndPublish": true
-  },
+  "options": {},
   "attributes": {
     "name": {
-      "type": "string"
+      "type": "string",
+      "unique": true,
+      "required": true
     },
     "description": {
       "type": "richtext"
     },
     "cover": {
-      "model": "file",
+      "collection": "file",
       "via": "related",
       "allowedTypes": [
         "images",
@@ -30,11 +28,6 @@
     },
     "url": {
       "type": "string"
-    },
-    "projectItems": {
-      "type": "component",
-      "repeatable": true,
-      "component": "project-components.project-items"
     }
   }
 }

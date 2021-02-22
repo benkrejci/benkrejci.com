@@ -16,7 +16,9 @@
       "enum": [
         "linkedin",
         "twitter",
-        "soundcloud"
+        "soundcloud",
+        "instagram",
+        "github"
       ]
     },
     "url": {

@@ -16,6 +16,9 @@
     },
     "socials": {
       "collection": "social"
+    },
+    "topNav": {
+      "collection": "page"
     }
   }
 }
