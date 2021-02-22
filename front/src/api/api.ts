@@ -24,6 +24,7 @@ export async function get<T>(uri: string, params?: any): Promise<Response<T>> {
 export interface Global {
   title: string
   socials: Social[]
+  topNav: Page[]
 }
 
 export interface Social {
@@ -42,6 +43,7 @@ export interface ContentType {
 
 export interface Page extends ContentType {
   title: string
+  description?: string
   slug: string
   socialInNav: boolean
   topWidgets: Widget[]
@@ -50,10 +52,21 @@ export interface Page extends ContentType {
   rightWidgets: Widget[]
 }
 
-export type Widget = ProjectGridWidget | RichTextWidget | SocialWidget | ImageWidget
+export type Widget =
+  | ProjectGridWidget
+  | ProjectListWidget
+  | RichTextWidget
+  | SocialWidget
+  | ImageWidget
 
 export interface ProjectGridWidget {
   __component: 'widget.project-grid'
+  id: number
+  projects: Project[]
+}
+
+export interface ProjectListWidget {
+  __component: 'widget.project-list'
   id: number
   projects: Project[]
 }

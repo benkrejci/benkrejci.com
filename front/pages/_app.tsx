@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 
 import { CssBaseline, ThemeProvider } from '@material-ui/core'
 
-import { theme } from '../src/theme'
+import { theme } from '../src/style/theme'
 
 export default function MyApp({ Component, pageProps }) {
   useEffect(() => {

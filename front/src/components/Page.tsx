@@ -2,51 +2,63 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { ReactElement } from 'react'
 
-import { Grid, makeStyles } from '@material-ui/core'
+import { Grid, Link, makeStyles } from '@material-ui/core'
 import Box from '@material-ui/core/Box'
 import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography'
 
-import { Global, Page as PageModel } from '../api/api'
+import { Global } from '../api/api'
+import { InternalLink } from '../utility/InternalLink'
 import { Navigation } from './Navigation'
 import { Social } from './widgets/Social'
 import { Widgets } from './widgets/Widgets'
 
 export function Page({
   global,
-  pages,
+  title,
+  description,
   header,
   footer,
   children,
 }: {
   global: Global
-  pages: PageModel[]
+  title?: string
+  description?: string
   header?: ReactElement
   footer?: ReactElement
   children?: ReactElement | ReactElement[] | string
 }): ReactElement {
   const router = useRouter()
   const matchingSlug = (router.asPath.charAt(0) === '/' && router.asPath.slice(1)) || 'home'
-  const currentPage = pages.find((page) => matchingSlug === page.slug)
+  const currentPage = global.topNav.find((page) => matchingSlug === page.slug)
+
+  title = title || currentPage?.title || ''
+  description = description || currentPage?.description || ''
 
   const styles = useStyles()
 
   return (
     <>
       <Head key="page-head">
-        <title>{global.title}</title>
+        <title>
+          {title ? title + ' - ' : ''}
+          {global.title}
+        </title>
+        {description ? <meta name="description" content={description} /> : ''}
       </Head>
 
-      <Container maxWidth="lg">
-        <Box my={2} component="header">
+      <Container maxWidth="lg" className={styles.container}>
+        <Box my={3} component="header">
           <Grid container spacing={4} justify="space-between" alignItems="center">
             <Grid item>
-              <Typography variant="h1" className={styles.headerTitle}>
-                Casey Georgi
-              </Typography>
+              <Link href="/" component={InternalLink} style={{ textDecoration: 'none' }}>
+                <Typography variant="h1" className={styles.headerTitle}>
+                  {global.title}
+                </Typography>
+              </Link>
             </Grid>
 
-            {currentPage?.socialInNav ? (
+            {!currentPage || currentPage.socialInNav ? (
               <Grid item>
                 <Box>
                   <Social socials={global.socials} />
@@ -58,7 +70,7 @@ export function Page({
 
             <Grid item>
               <Box>
-                <Navigation pages={pages} />
+                <Navigation pages={global.topNav} />
               </Box>
             </Grid>
           </Grid>
@@ -95,8 +107,29 @@ export function Page({
 }
 
 const useStyles = makeStyles((theme) => ({
+  container: {
+    // Setting overflow to force inner margin not to collapse outside the container.
+    // Otherwise margin will end up between <html> and container elements
+    overflow: 'hidden',
+    backgroundColor: theme.palette.background.paper,
+    minHeight: '100vh',
+    boxShadow: `0 0 ${theme.spacing(3)}px rgb(0 0 0 / 24%)`,
+    [theme.breakpoints.down('xs')]: {
+      padding: `0 ${theme.spacing(2)}px`,
+    },
+    [theme.breakpoints.up('sm')]: {
+      padding: `0 ${theme.spacing(3)}px`,
+    },
+    [theme.breakpoints.up('md')]: {
+      padding: `0 ${theme.spacing(4)}px`,
+    },
+    [theme.breakpoints.up('lg')]: {
+      padding: `0 ${theme.spacing(6)}px`,
+    },
+  },
+
   headerTitle: {
-    background: theme.extendedPalette.background.groovy,
+    background: theme.extendedPalette.background.subdued,
     WebkitBackgroundClip: 'text',
     WebkitTextFillColor: 'transparent',
   },
@@ -110,6 +143,7 @@ const useStyles = makeStyles((theme) => ({
   },
 
   leftWidgets: {
+    flexShrink: 0,
     //order: 0,
   },
 
@@ -119,6 +153,7 @@ const useStyles = makeStyles((theme) => ({
   },
 
   rightWidgets: {
+    flexShrink: 0,
     //order: 3,
 
     [theme.breakpoints.down('xs')]: {

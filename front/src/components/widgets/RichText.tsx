@@ -19,7 +19,7 @@ export function RichText({
 
 const styles = (theme) => ({
   listItem: {
-    marginTop: theme.spacing(1),
+    //marginTop: theme.spacing(1),
   },
 })
 
@@ -39,7 +39,9 @@ const options = {
       props: { gutterBottom: true, variant: 'subtitle', paragraph: true },
     },
     p: { component: Typography, props: { paragraph: true } },
-    a: { component: Link },
+    a: { component: Link, props: { target: '_blank' } },
+    //ul: { component: List, props: { component: 'ul' } },
+    //ol: { component: List, props: { component: 'ol' } },
     li: {
       // @ts-ignore MUI TS bug
       component: withStyles(styles)(({ classes, ...props }) => (

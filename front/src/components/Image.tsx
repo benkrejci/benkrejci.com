@@ -1,7 +1,8 @@
 import MaterialImage from 'material-ui-image'
 import React, { ReactElement } from 'react'
 
-import { Grid } from '@material-ui/core'
+import { Grid, useTheme } from '@material-ui/core'
+import { CSSProperties } from '@material-ui/core/styles/withStyles'
 
 import { EXTERNAL_API_SERVER, Image as ImageModel } from '../api/api'
 
@@ -12,12 +13,18 @@ export const Image = ({
   maxWidth,
   maxHeight = '50vh',
   align = 'center',
+  className,
+  style,
 }: {
   image: ImageModel
   maxWidth?: string | number
   maxHeight?: string | number
   align?: 'center' | 'left' | 'right'
+  className?: string
+  style?: CSSProperties
 }): ReactElement => {
+  const theme = useTheme()
+
   const aspectRatio = image.width / image.height
   if (maxWidth && !maxHeight) {
     if (typeof maxWidth === 'number') {
@@ -39,6 +46,8 @@ export const Image = ({
     <Grid
       container
       justify={align === 'left' ? 'flex-start' : align === 'right' ? 'flex-end' : 'center'}
+      className={className}
+      style={{ backgroundColor: 'rgba(0, 0, 0, 0.06)', ...style }}
     >
       <Grid item xs style={{ maxWidth, maxHeight }}>
         <MaterialImage
@@ -46,6 +55,7 @@ export const Image = ({
           aspectRatio={aspectRatio}
           width={image.width}
           height={image.height}
+          color={theme.palette.background.default}
         />
       </Grid>
     </Grid>

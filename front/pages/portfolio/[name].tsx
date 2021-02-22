@@ -9,17 +9,22 @@ import {
 import { Image } from '../../src/components/Image'
 import { Page } from '../../src/components/Page'
 import { RichText } from '../../src/components/widgets/RichText'
+import { useGlobalStyles } from '../../src/style/global'
 import { ExternalLink } from '../../src/utility/ExternalLink'
 import { InternalLink } from '../../src/utility/InternalLink'
 import { getPageProps, PageProps } from '../../src/utility/staticProps'
 import { WrapIf } from '../../src/utility/WrapIf'
 
 export default function Project({ project, ...props }: { project: ProjectModel } & PageProps) {
+  const globalStyles = useGlobalStyles()
+
   return (
     <Page
       {...props}
+      title={project.name}
+      description={project.description}
       header={
-        <Box mx={1} my={4}>
+        <Box my={4}>
           <Breadcrumbs>
             <Link href="/portfolio" component={InternalLink}>
               Portfolio
@@ -29,18 +34,20 @@ export default function Project({ project, ...props }: { project: ProjectModel }
         </Box>
       }
     >
-      <Grid container spacing={6}>
+      <Grid container spacing={4}>
         <Grid item xs={12} sm={5} md={4}>
-          <WrapIf
-            if={project.url}
-            wrap={(children) => (
-              <Link href={project.url} target="_blank" component={ExternalLink}>
-                {children}
-              </Link>
-            )}
-          >
-            <Image image={project.cover} maxHeight="40vh" />
-          </WrapIf>
+          <Paper>
+            <WrapIf
+              if={project.url}
+              wrap={(children) => (
+                <Link href={project.url} target="_blank" component={ExternalLink}>
+                  {children}
+                </Link>
+              )}
+            >
+              <Image image={project.cover} maxHeight="40vh" />
+            </WrapIf>
+          </Paper>
         </Grid>
         <Grid item xs={12} sm={7} md={8}>
           <Box>
@@ -48,16 +55,20 @@ export default function Project({ project, ...props }: { project: ProjectModel }
               <WrapIf
                 if={project.url}
                 wrap={(children) => (
-                  <Link
-                    href={project.url}
-                    target="_blank"
-                    component={ExternalLink}
-                    color="textPrimary"
-                  >
-                    {children}
-                    &nbsp;
-                    <OpenInNew titleAccess="opens in new window" />
-                  </Link>
+                  <>
+                    <Link
+                      href={project.url}
+                      target="_blank"
+                      component={ExternalLink}
+                      color="textPrimary"
+                    >
+                      {children}{' '}
+                      <OpenInNew
+                        titleAccess="opens in new window"
+                        className={globalStyles.inlineIcon}
+                      />
+                    </Link>
+                  </>
                 )}
               >
                 {project.name}

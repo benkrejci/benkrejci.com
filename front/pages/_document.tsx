@@ -4,7 +4,7 @@ import React from 'react'
 
 import { ServerStyleSheets } from '@material-ui/core/styles'
 
-import { theme } from '../src/theme'
+import { theme } from '../src/style/theme'
 
 export default class MyDocument extends Document {
   render() {
