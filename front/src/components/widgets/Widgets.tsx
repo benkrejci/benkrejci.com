@@ -48,7 +48,7 @@ export function Widgets({
                   return <Image image={widget.image} align={widget.align} />
 
                 default:
-                  console?.warn && console.warn(`Unknown widget component: ${widget.__component}`)
+                  console?.warn && console.warn(`Unknown widget component:`, widget)
               }
             })()}
           </WrapIf>
