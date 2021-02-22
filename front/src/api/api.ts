@@ -7,7 +7,7 @@ export interface Response<T> {
 
 export const EXTERNAL_API_SERVER = 'https://back.benkrejci.com'
 export const API_SERVER =
-  process.env.NODE_ENV === 'development' ? EXTERNAL_API_SERVER : 'http://localhost:1337'
+  process.env.NODE_ENV === 'development' ? EXTERNAL_API_SERVER : 'http://localhost:1339'
 
 export const toSlug = (name: string) => encodeURIComponent(name.replace(/ /g, '-'))
 export const fromSlug = (slug: string) => decodeURIComponent(slug).replace(/-/g, ' ')
