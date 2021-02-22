@@ -1,8 +1,7 @@
 import React, { ReactElement } from 'react'
 
 import { Grid, Link, makeStyles, SvgIcon, SvgIconProps, Typography } from '@material-ui/core'
-import LinkedInIcon from '@material-ui/icons/LinkedIn'
-import TwitterIcon from '@material-ui/icons/Twitter'
+import { GitHub, Instagram, LinkedIn, Twitter } from '@material-ui/icons'
 
 import { Social as SocialModel } from '../../api/api'
 import SoundcloudIcon from '../../icons/Soundcloud'
@@ -15,16 +14,24 @@ interface SocialDefinition {
 
 const socialDefinitionsByType: { [type: string]: SocialDefinition } = {
   linkedin: {
-    Icon: LinkedInIcon,
+    Icon: LinkedIn,
     title: 'LinkedIn',
   },
   twitter: {
-    Icon: TwitterIcon,
+    Icon: Twitter,
     title: 'Twitter',
   },
   soundcloud: {
     Icon: SoundcloudIcon,
     title: 'SoundCloud',
+  },
+  instagram: {
+    Icon: Instagram,
+    title: 'Instagram',
+  },
+  github: {
+    Icon: GitHub,
+    title: 'GitHub',
   },
 }
 
@@ -43,11 +50,15 @@ export function Social({
   return (
     <Grid container spacing={1}>
       {socials.map((social, i) => {
+        if (!(social.type in socialDefinitionsByType)) {
+          console?.warn && console.warn(`Unknown social type: ${social.type}`)
+          return null
+        }
         const definition = socialDefinitionsByType[social.type]
         return (
           <Grid item key={social.type + i} xs={wide ? 12 : undefined}>
             <Link href={social.url} target="_blank" component={ExternalLink}>
-              <Grid container justify="flex-start" alignItems="center" spacing={2}>
+              <Grid container justify="flex-start" alignItems="center" spacing={2} wrap="nowrap">
                 <Grid item xs={wide ? false : 12}>
                   {React.createElement(definition.Icon, {
                     'aria-label': wide ? '' : definition.title,
@@ -74,14 +85,12 @@ export function Social({
 const useStyles = makeStyles((theme) => ({
   socialIcon: {
     display: 'block',
-    color: theme.palette.text.secondary,
-    //color: theme.palette.primary.dark,
+    color: theme.palette.primary.main,
   },
   socialLabel: {
     '& .MuiTypography-root': {
       fontWeight: 500,
-      color: theme.palette.text.secondary,
-      //color: theme.palette.primary.dark,
+      color: theme.palette.primary.main,
     },
   },
 }))
