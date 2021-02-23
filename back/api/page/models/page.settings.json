@@ -59,9 +59,28 @@
         "widget.project-list"
       ]
     },
-    "socialInNav": {
-      "type": "boolean",
-      "default": true
+    "hideSocialDown": {
+      "type": "enumeration",
+      "enum": [
+        "xs",
+        "sm",
+        "md",
+        "lg",
+        "xl"
+      ]
+    },
+    "hideSocialUp": {
+      "type": "enumeration",
+      "enum": [
+        "xs",
+        "sm",
+        "md",
+        "lg",
+        "xl"
+      ]
+    },
+    "description": {
+      "type": "string"
     }
   }
 }

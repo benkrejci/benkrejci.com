@@ -1,0 +1,20 @@
+{
+  "collectionName": "components_ui_options_breakpoints",
+  "info": {
+    "name": "breakpoints",
+    "icon": "atom"
+  },
+  "options": {},
+  "attributes": {
+    "breakpoint": {
+      "type": "enumeration",
+      "enum": [
+        "xs",
+        "sm",
+        "md",
+        "lg",
+        "xl"
+      ]
+    }
+  }
+}
