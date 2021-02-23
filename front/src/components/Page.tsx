@@ -2,7 +2,7 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { ReactElement } from 'react'
 
-import { Grid, Link, makeStyles } from '@material-ui/core'
+import { Grid, Hidden, Link, makeStyles } from '@material-ui/core'
 import Box from '@material-ui/core/Box'
 import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography'
@@ -37,6 +37,10 @@ export function Page({
 
   const styles = useStyles()
 
+  const socialHiddenProps = {}
+  if (currentPage?.hideSocialDown) socialHiddenProps[currentPage.hideSocialDown + 'Down'] = true
+  if (currentPage?.hideSocialUp) socialHiddenProps[currentPage.hideSocialUp + 'Up'] = true
+
   return (
     <>
       <Head key="page-head">
@@ -58,15 +62,13 @@ export function Page({
               </Link>
             </Grid>
 
-            {!currentPage || currentPage.socialInNav ? (
+            <Hidden implementation="css" {...socialHiddenProps}>
               <Grid item>
-                <Box>
+                <Box padding={2}>
                   <Social socials={global.socials} />
                 </Box>
               </Grid>
-            ) : (
-              ''
-            )}
+            </Hidden>
 
             <Grid item>
               <Box>
@@ -111,9 +113,9 @@ const useStyles = makeStyles((theme) => ({
     // Setting overflow to force inner margin not to collapse outside the container.
     // Otherwise margin will end up between <html> and container elements
     overflow: 'hidden',
-    backgroundColor: theme.palette.background.paper,
+    //backgroundColor: theme.palette.background.paper,
     minHeight: '100vh',
-    boxShadow: `0 0 ${theme.spacing(3)}px rgb(0 0 0 / 24%)`,
+    //boxShadow: `0 0 ${theme.spacing(3)}px rgb(0 0 0 / 24%)`,
     [theme.breakpoints.down('xs')]: {
       padding: `0 ${theme.spacing(2)}px`,
     },

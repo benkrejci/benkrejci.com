@@ -20,13 +20,13 @@ export function Widgets({
   if (!children?.length) return null
   return (
     <Grid container spacing={4}>
-      {children?.map((widget) => (
-        <Grid item xs={12} key={widget.id}>
+      {children?.map((widget, index) => (
+        <Grid item xs={12} key={`${widget.id}-${index}`}>
           <WrapIf
             if={'paper' in widget && widget.paper}
             wrap={(children) => (
               <Paper elevation={1}>
-                <Box p={3}>{children}</Box>
+                <Box p={4}>{children}</Box>
               </Paper>
             )}
           >
@@ -45,7 +45,13 @@ export function Widgets({
                   return <Social socials={global.socials} wide />
 
                 case 'widget.image':
-                  return <Image image={widget.image} align={widget.align} />
+                  return (
+                    <Image
+                      image={widget.image}
+                      align={widget.align}
+                      style={{ backgroundColor: 'transparent' }}
+                    />
+                  )
 
                 default:
                   console?.warn && console.warn(`Unknown widget component:`, widget)

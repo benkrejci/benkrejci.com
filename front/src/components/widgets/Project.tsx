@@ -15,50 +15,58 @@ export const Project = ({ project }: { project: ProjectModel }): ReactElement =>
   const styles = useStyles()
 
   return (
-    <Box mb={4} className={styles.container}>
-      {project.cover ? (
-        <div className={styles.cover}>
-          <Paper elevation={1}>
-            <WrapIf
-              if={project.url}
-              wrap={(children) => (
-                <Link href={project.url} target="_blank" component={ExternalLink}>
-                  {children}
-                </Link>
-              )}
-            >
-              <Image image={project.cover} maxHeight="36vh" />
-            </WrapIf>
-          </Paper>
-        </div>
-      ) : (
-        ''
-      )}
+    <Box mb={4}>
+      <Paper elevation={1}>
+        <Box p={4} className={styles.container}>
+          {project.cover ? (
+            <div className={styles.cover}>
+              <Paper elevation={1}>
+                <WrapIf
+                  if={project.url}
+                  wrap={(children) => (
+                    <Link href={project.url} target="_blank" component={ExternalLink}>
+                      {children}
+                    </Link>
+                  )}
+                >
+                  <Image
+                    image={project.cover}
+                    maxHeight="36vh"
+                    style={{ backgroundColor: 'transparent' }}
+                  />
+                </WrapIf>
+              </Paper>
+            </div>
+          ) : (
+            ''
+          )}
 
-      <div className={styles.title}>
-        <Typography variant="h3" gutterBottom>
-          <WrapIf
-            if={project.url}
-            wrap={(children) => (
-              <Link href={project.url} target="_blank" component={ExternalLink}>
-                {children} <OpenInNew className={globalStyles.inlineIcon} />
-              </Link>
-            )}
-          >
-            {project.name}
-          </WrapIf>
-        </Typography>
-      </div>
+          <div className={styles.title}>
+            <Typography variant="h3" gutterBottom>
+              <WrapIf
+                if={project.url}
+                wrap={(children) => (
+                  <Link href={project.url} target="_blank" component={ExternalLink}>
+                    {children} <OpenInNew className={globalStyles.inlineIcon} />
+                  </Link>
+                )}
+              >
+                {project.name}
+              </WrapIf>
+            </Typography>
+          </div>
 
-      <div className={styles.description}>
-        <RichText>{project.description}</RichText>
-      </div>
+          <div className={styles.description}>
+            <RichText>{project.description}</RichText>
+          </div>
+        </Box>
+      </Paper>
     </Box>
   )
 }
 
 const useStyles = makeStyles((theme) => ({
-  [theme.breakpoints.down('xs')]: {
+  [theme.breakpoints.down('sm')]: {
     container: {
       display: 'flex',
       flexWrap: 'wrap',
@@ -78,7 +86,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 
-  [theme.breakpoints.up('sm')]: {
+  [theme.breakpoints.up('md')]: {
     cover: {
       float: 'right',
       width: '33%',

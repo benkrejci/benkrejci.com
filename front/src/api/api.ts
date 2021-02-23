@@ -1,5 +1,7 @@
 import axios from 'axios'
 
+import { Breakpoint } from '@material-ui/core/styles/createBreakpoints'
+
 export interface Response<T> {
   data?: T
   error?: string
@@ -43,9 +45,10 @@ export interface ContentType {
 
 export interface Page extends ContentType {
   title: string
-  description?: string
   slug: string
-  socialInNav: boolean
+  description?: string
+  hideSocialDown: Breakpoint | null
+  hideSocialUp: Breakpoint | null
   topWidgets: Widget[]
   bottomWidgets: Widget[]
   leftWidgets: Widget[]
