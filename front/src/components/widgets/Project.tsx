@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react'
 
-import { Link, makeStyles, Paper, Typography } from '@material-ui/core'
+import { Box, Link, makeStyles, Paper, Typography } from '@material-ui/core'
 import { OpenInNew } from '@material-ui/icons'
 
 import { Project as ProjectModel } from '../../api/api'
@@ -15,7 +15,7 @@ export const Project = ({ project }: { project: ProjectModel }): ReactElement =>
   const styles = useStyles()
 
   return (
-    <div className={styles.container}>
+    <Box mb={4} className={styles.container}>
       {project.cover ? (
         <div className={styles.cover}>
           <Paper elevation={1}>
@@ -53,7 +53,7 @@ export const Project = ({ project }: { project: ProjectModel }): ReactElement =>
       <div className={styles.description}>
         <RichText>{project.description}</RichText>
       </div>
-    </div>
+    </Box>
   )
 }
 
@@ -83,6 +83,7 @@ const useStyles = makeStyles((theme) => ({
       float: 'right',
       width: '33%',
       minWidth: '300px',
+      marginLeft: theme.spacing(2),
     },
   },
   // container: {

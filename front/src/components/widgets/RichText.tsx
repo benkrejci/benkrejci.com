@@ -3,6 +3,8 @@ import React, { ReactElement } from 'react'
 
 import { Link, Typography, withStyles } from '@material-ui/core'
 
+import { EXTERNAL_API_SERVER } from '../../api/api'
+
 export function RichText({
   content,
   children,
@@ -40,6 +42,15 @@ const options = {
     },
     p: { component: Typography, props: { paragraph: true } },
     a: { component: Link, props: { target: '_blank' } },
+    img: {
+      component: ({ src, ...props }) => (
+        <img
+          src={`${EXTERNAL_API_SERVER}/${src}`}
+          {...props}
+          style={{ width: '100%', maxHeight: '360px', maxWidth: '360px' }}
+        />
+      ),
+    },
     //ul: { component: List, props: { component: 'ul' } },
     //ol: { component: List, props: { component: 'ol' } },
     li: {
