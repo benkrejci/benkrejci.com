@@ -31,7 +31,7 @@ export const Project = ({ project }: { project: ProjectModel }): ReactElement =>
                 >
                   <Image
                     image={project.cover}
-                    maxHeight="36vh"
+                    maxHeight="60vh"
                     style={{ backgroundColor: 'transparent' }}
                   />
                 </WrapIf>
@@ -66,7 +66,7 @@ export const Project = ({ project }: { project: ProjectModel }): ReactElement =>
 }
 
 const useStyles = makeStyles((theme) => ({
-  [theme.breakpoints.down('sm')]: {
+  [theme.breakpoints.down('xs')]: {
     container: {
       display: 'flex',
       flexWrap: 'wrap',
@@ -86,7 +86,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 
-  [theme.breakpoints.up('md')]: {
+  [theme.breakpoints.up('sm')]: {
     cover: {
       float: 'right',
       width: '33%',
