@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_widget_timelines",
+  "info": {
+    "name": "Timeline",
+    "icon": "calendar",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "timelineEvents": {
+      "type": "component",
+      "repeatable": true,
+      "component": "timeline-components.timeline-event"
+    },
+    "description": {
+      "type": "richtext"
+    }
+  }
+}

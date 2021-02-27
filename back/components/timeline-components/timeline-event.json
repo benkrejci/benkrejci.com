@@ -1,0 +1,29 @@
+{
+  "collectionName": "components_timeline_components_timeline_events",
+  "info": {
+    "name": "Timeline-Event",
+    "icon": "calendar-check",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "start": {
+      "type": "date"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "richtext"
+    },
+    "category": {
+      "type": "string"
+    },
+    "icon": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string"
+    }
+  }
+}

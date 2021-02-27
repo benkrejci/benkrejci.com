@@ -26,7 +26,8 @@
         "widget.rich-text",
         "widget.social",
         "widget.image",
-        "widget.project-list"
+        "widget.project-list",
+        "widget.timeline"
       ]
     },
     "bottomWidgets": {
@@ -36,7 +37,8 @@
         "widget.rich-text",
         "widget.social",
         "widget.image",
-        "widget.project-list"
+        "widget.project-list",
+        "widget.timeline"
       ]
     },
     "leftWidgets": {
@@ -46,7 +48,8 @@
         "widget.rich-text",
         "widget.social",
         "widget.image",
-        "widget.project-list"
+        "widget.project-list",
+        "widget.timeline"
       ]
     },
     "rightWidgets": {
@@ -56,7 +59,8 @@
         "widget.rich-text",
         "widget.social",
         "widget.image",
-        "widget.project-list"
+        "widget.project-list",
+        "widget.timeline"
       ]
     },
     "hideSocialDown": {
