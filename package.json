@@ -17,5 +17,8 @@
     "back",
     "front",
     "deployer"
-  ]
+  ],
+  "devDependencies": {
+    "prettier": "^2.2.1"
+  }
 }

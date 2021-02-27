@@ -116,17 +116,22 @@ const useStyles = makeStyles((theme) => ({
     //backgroundColor: theme.palette.background.paper,
     minHeight: '100vh',
     //boxShadow: `0 0 ${theme.spacing(3)}px rgb(0 0 0 / 24%)`,
+    paddingBottom: theme.spacing(2),
     [theme.breakpoints.down('xs')]: {
-      padding: `0 ${theme.spacing(2)}px`,
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(2),
     },
     [theme.breakpoints.up('sm')]: {
-      padding: `0 ${theme.spacing(3)}px`,
+      paddingLeft: theme.spacing(3),
+      paddingRight: theme.spacing(3),
     },
     [theme.breakpoints.up('md')]: {
-      padding: `0 ${theme.spacing(4)}px`,
+      paddingLeft: theme.spacing(4),
+      paddingRight: theme.spacing(4),
     },
     [theme.breakpoints.up('lg')]: {
-      padding: `0 ${theme.spacing(6)}px`,
+      paddingLeft: theme.spacing(6),
+      paddingRight: theme.spacing(6),
     },
   },
 
