@@ -47,7 +47,7 @@ export const Image = ({
       container
       justify={align === 'left' ? 'flex-start' : align === 'right' ? 'flex-end' : 'center'}
       className={className}
-      style={{ backgroundColor: 'rgba(255, 255, 255, 0.06)', ...style }}
+      style={{ backgroundColor: theme.palette.background.paper, ...style }}
     >
       <Grid item xs style={{ maxWidth, maxHeight }}>
         <MaterialImage
