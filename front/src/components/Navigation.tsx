@@ -82,7 +82,7 @@ const useStyles = makeStyles((theme) => {
       // should be xSpaceBetween / 2.
       margin: `0 ${xSpaceBetween / 2}px`,
       padding: `${yPadding}px ${xPadding}px`,
-      background: theme.extendedPalette.background.groovy,
+      background: theme.gradient.groovy,
       color: theme.palette.getContrastText(theme.palette.primary.main),
     },
   }

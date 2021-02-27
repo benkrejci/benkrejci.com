@@ -131,7 +131,7 @@ const useStyles = makeStyles((theme) => ({
   },
 
   headerTitle: {
-    background: theme.extendedPalette.background.subdued,
+    background: theme.gradient.subdued,
     WebkitBackgroundClip: 'text',
     WebkitTextFillColor: 'transparent',
   },

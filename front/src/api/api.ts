@@ -17,6 +17,7 @@ export const fromSlug = (slug: string) => decodeURIComponent(slug).replace(/-/g,
 export async function get<T>(uri: string, params?: any): Promise<Response<T>> {
   try {
     const response = await axios.get(`${API_SERVER}/${uri}`, { params })
+    //console.log(JSON.stringify(response.data, null, 2))
     return { data: response.data }
   } catch (error) {
     return { error }
@@ -61,6 +62,7 @@ export type Widget =
   | RichTextWidget
   | SocialWidget
   | ImageWidget
+  | TimelineWidget
 
 export interface ProjectGridWidget {
   __component: 'widget.project-grid'
@@ -93,6 +95,22 @@ export interface ImageWidget {
   id: number
   image: Image
   align: 'left' | 'center' | 'right'
+}
+
+export interface TimelineWidget {
+  __component: 'widget.timeline'
+  id: number
+  description: string
+  timelineEvents: TimelineEvent[]
+}
+
+export interface TimelineEvent {
+  id: number
+  start: string
+  icon: string
+  title: string
+  category: string
+  description: string
 }
 
 export const getPages = async (params?: any): Promise<Response<Page[]>> => get('pages')

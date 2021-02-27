@@ -9,6 +9,7 @@ import { PortfolioGrid } from './PortfolioGrid'
 import { ProjectList } from './ProjectList'
 import { RichText } from './RichText'
 import { Social } from './Social'
+import { Timeline } from './Timeline'
 
 export function Widgets({
   global,
@@ -52,6 +53,9 @@ export function Widgets({
                       style={{ backgroundColor: 'transparent' }}
                     />
                   )
+
+                case 'widget.timeline':
+                  return <Timeline {...widget} />
 
                 default:
                   console?.warn && console.warn(`Unknown widget component:`, widget)
