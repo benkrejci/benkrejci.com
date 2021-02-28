@@ -23,11 +23,11 @@ export const Project = ({ project }: { project: ProjectModel }): ReactElement =>
               <Paper elevation={1}>
                 <WrapIf
                   if={project.url}
-                  wrap={(children) => (
+                  wrapper={
                     <Link href={project.url} target="_blank" component={ExternalLink}>
-                      {children}
+                      {' '}
                     </Link>
-                  )}
+                  }
                 >
                   <Image
                     image={project.cover}
@@ -45,13 +45,13 @@ export const Project = ({ project }: { project: ProjectModel }): ReactElement =>
             <Typography variant="h3" gutterBottom>
               <WrapIf
                 if={project.url}
-                wrap={(children) => (
-                  <Link href={project.url} target="_blank" component={ExternalLink}>
+                wrapper={(children, props) => (
+                  <Link href={project.url} target="_blank" component={ExternalLink} {...props}>
                     {children} <OpenInNew className={globalStyles.inlineIcon} />
                   </Link>
                 )}
               >
-                {project.name}
+                <>{project.name}</>
               </WrapIf>
             </Typography>
           </div>

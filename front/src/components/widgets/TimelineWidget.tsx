@@ -1,10 +1,10 @@
 import React, { ReactElement } from 'react'
 
-import { Box, makeStyles, useTheme } from '@material-ui/core'
+import { Box, useTheme } from '@material-ui/core'
 
 import { TimelineEvent } from '../../api/api'
-import { RichText } from './RichText'
 import { Timeline } from '../Timeline'
+import { RichText } from './RichText'
 
 export const TimelineWidget = ({
   description,
@@ -16,7 +16,7 @@ export const TimelineWidget = ({
   const theme = useTheme()
 
   const categoryColors = [
-    theme.palette.primary.main,
+    //theme.palette.primary.main,
     theme.palette.secondary.main,
     theme.palette.tertiary.main,
     theme.palette.quarternary.main,

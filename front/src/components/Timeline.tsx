@@ -1,8 +1,12 @@
 import { ReactElement } from 'react'
-import { makeStyles } from '@material-ui/core'
-import { fade, Paper, Typography } from '@material-ui/core'
+
+import { fade, Link, makeStyles, Paper, Typography } from '@material-ui/core'
+
+import { Icon } from '../icons/Icon'
+import { ExternalLink } from '../utility/ExternalLink'
+import { ParallaxShow } from '../utility/ParallaxShow'
+import { WrapIf } from '../utility/WrapIf'
 import { RichText } from './widgets/RichText'
-import { Icon } from './Icon'
 
 export interface TimelineCategory {
   name: string
@@ -13,6 +17,7 @@ export interface TimelineCategory {
 export interface TimelineEvent {
   start: Date
   title: string
+  url: string
   description: string
   category: TimelineCategory
   icon: string
@@ -34,7 +39,7 @@ export const Timeline = ({
   let rowIndex = 2
 
   // space between category headers and events
-  cells.push(<div className={styles.topBufferCell} />)
+  cells.push(<div className={styles.topBufferCell} key="topBuffer" />)
   rowIndex++
 
   for (let eventIndex = 0; eventIndex <= events.length; eventIndex++) {
@@ -49,22 +54,32 @@ export const Timeline = ({
           <div
             className={styles.verticalLineCell}
             style={{ gridRowStart: lastRow + 1, gridRowEnd: rowIndex++ + 1 }}
+            key={`yearLine-${currentYear}`}
           >
-            <div className={styles.verticalLine} />
+            <ParallaxShow transition="fade" className={styles.verticalLineContainer}>
+              <div className={styles.verticalLine} />
+            </ParallaxShow>
           </div>,
         )
       }
 
       lastRow = rowIndex
       lastYear = currentYear
-      // year
+      // year label
       cells.push(
-        <div className={styles.dateCell} style={{ gridRowStart: rowIndex++ }}>
-          <Typography>{currentYear}</Typography>
+        <div
+          className={styles.dateCell}
+          style={{ gridRowStart: rowIndex++ }}
+          key={`yearLabel-${rowIndex}`}
+        >
+          <ParallaxShow transition="slide" direction="right">
+            <Typography>{currentYear}</Typography>
+          </ParallaxShow>
         </div>,
       )
     }
 
+    // event
     if (event) {
       const categoryIndex = categories.indexOf(event.category)
       cells.push(
@@ -75,22 +90,36 @@ export const Timeline = ({
             gridRowEnd: rowIndex++,
             gridColumnStart: 2 + categoryIndex,
           }}
+          key={`event-${rowIndex}`}
         >
-          <Paper elevation={2}>
-            <Icon name={event.icon} className={styles.eventIcon} />
-            <Typography variant="h5" component="h3">
-              {event.title}
-            </Typography>
-            <RichText>{event.description}</RichText>
-          </Paper>
+          <ParallaxShow>
+            <WrapIf
+              if={event.url}
+              wrapper={
+                <Link href={event.url} target="_blank" component={ExternalLink}>
+                  {' '}
+                </Link>
+              }
+            >
+              <Paper elevation={2}>
+                <Icon name={event.icon} className={styles.eventIcon} />
+                <Typography variant="h5" component="h3">
+                  {event.title}
+                </Typography>
+                <RichText>{event.description}</RichText>
+              </Paper>
+            </WrapIf>
+          </ParallaxShow>
         </div>,
       )
     }
   }
+  // future year line
   cells.push(
     <div
       className={styles.verticalLineCell}
       style={{ gridRowStart: lastRow + 1, gridRowEnd: rowIndex++ + 1 }}
+      key="futureYearLine"
     >
       <div className={`${styles.verticalLine} ${styles.futureLine}`} />
     </div>,
@@ -108,6 +137,7 @@ export const Timeline = ({
           gridRowStart: 1,
           color: category.color,
         }}
+        key={`categoryHeader-${category.name}`}
       >
         <Typography variant="h5" component="h2">
           {category.name}
@@ -125,6 +155,7 @@ export const Timeline = ({
           gridRowStart: 2,
           gridRowEnd: rowIndex,
         }}
+        key={`categoryLine-${category.name}`}
       >
         <div
           className={`${styles.verticalLine} ${styles.verticalLineCap}`}
@@ -178,8 +209,12 @@ const useStyles = makeStyles((theme) => ({
     zIndex: 1,
   },
 
-  verticalLine: {
+  verticalLineContainer: {
     flexGrow: 1,
+  },
+
+  verticalLine: {
+    height: '100%',
     width: '2px',
     backgroundColor: fade(theme.palette.text.primary, 0.6),
   },
@@ -218,6 +253,9 @@ const useStyles = makeStyles((theme) => ({
       padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`,
       position: 'relative',
       overflow: 'visible',
+    },
+    '& .MuiLink-root .MuiPaper-root, & .MuiLink-root .MuiSvgIcon-root': {
+      color: theme.palette.primary.main,
     },
   },
 

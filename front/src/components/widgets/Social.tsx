@@ -3,8 +3,8 @@ import React, { ReactElement } from 'react'
 import { Grid, Link, makeStyles, SvgIconProps, Typography } from '@material-ui/core'
 
 import { Social as SocialModel } from '../../api/api'
+import { Icon } from '../../icons/Icon'
 import { ExternalLink } from '../../utility/ExternalLink'
-import { Icon } from '../Icon'
 
 const socialTitlesByType: { [type: string]: string } = {
   linkedin: 'LinkedIn',

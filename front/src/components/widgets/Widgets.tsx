@@ -25,8 +25,8 @@ export function Widgets({
         <Grid item xs={12} key={`${widget.id}-${index}`}>
           <WrapIf
             if={'paper' in widget && widget.paper}
-            wrap={(children) => (
-              <Paper elevation={1}>
+            wrapper={(children, props, ref) => (
+              <Paper elevation={1} {...props} ref={ref}>
                 <Box p={4}>{children}</Box>
               </Paper>
             )}

@@ -110,6 +110,7 @@ export interface TimelineEvent {
   icon: string
   title: string
   category: string
+  url: string
   description: string
 }
 

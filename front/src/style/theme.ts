@@ -67,7 +67,7 @@ export const theme = responsiveFontSizes(
       text: {},
       background: {
         default: 'rgba(24, 24, 24, 0.1)',
-        paper: 'rgba(33, 36, 56, 0.6)',
+        paper: 'rgba(28, 31, 49, 0.76)',
       },
       tonalOffset: 0.2,
     },

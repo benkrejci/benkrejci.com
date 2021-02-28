@@ -6,7 +6,8 @@ import {
   LocalShipping, MusicNote, School, Star, Twitter, Work
 } from '@material-ui/icons'
 
-import Soundcloud from '../icons/Soundcloud'
+import Drum from './Drum'
+import Soundcloud from './Soundcloud'
 
 const iconComponentByName: { [type: string]: typeof SvgIcon } = {
   linkedin: LinkedIn,
@@ -26,6 +27,7 @@ const iconComponentByName: { [type: string]: typeof SvgIcon } = {
   ear: Hearing,
   school: School,
   work: Work,
+  drum: Drum,
 }
 
 export const Icon = ({ name, ...props }: { name: string } & SvgIconProps): ReactElement => {
