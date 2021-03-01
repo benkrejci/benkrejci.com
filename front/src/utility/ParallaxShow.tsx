@@ -1,20 +1,22 @@
-import React, { HTMLProps, ReactElement, useCallback, useEffect, useState } from 'react'
+import React, {
+  cloneElement, HTMLProps, ReactElement, useCallback, useEffect, useState
+} from 'react'
 
-import { Fade, Grow, Slide } from '@material-ui/core'
+import { Grow } from '@material-ui/core'
+import { TransitionProps } from '@material-ui/core/transitions'
 
 import { AnimationQueue } from './AnimationQueue'
 import { isInView } from './isInView'
 
-export const ParallaxShow = ({
+export const ParallaxShow = <T extends TransitionProps>({
   children,
-  transition = 'grow',
-  direction = 'left',
+  transition = <Grow />,
   animationQueue,
   ...props
 }: {
   children: ReactElement
-  transition?: 'grow' | 'slide' | 'fade'
-  direction?: 'left' | 'right' | 'up' | 'down'
+  transition?: ReactElement
+  transitionProps?: Omit<T, 'in' & 'children'>
   animationQueue?: AnimationQueue
 } & HTMLProps<HTMLDivElement>): ReactElement => {
   const [isVisible, ref] = isInView({ threshold: 0.3 })
@@ -38,16 +40,7 @@ export const ParallaxShow = ({
 
   return (
     <div ref={ref} {...props}>
-      {(() => {
-        if (transition === 'grow') return <Grow in={animateIn}>{children}</Grow>
-        if (transition === 'slide')
-          return (
-            <Slide in={animateIn} direction={direction}>
-              {children}
-            </Slide>
-          )
-        if (transition === 'fade') return <Fade in={animateIn}>{children}</Fade>
-      })()}
+      {cloneElement(transition, { in: animateIn, children })}
     </div>
   )
 }

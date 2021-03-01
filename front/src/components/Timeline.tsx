@@ -1,6 +1,6 @@
 import { ReactElement } from 'react'
 
-import { fade, Link, makeStyles, Paper, Typography } from '@material-ui/core'
+import { fade, Grow, Link, makeStyles, Paper, Slide, Typography, Zoom } from '@material-ui/core'
 
 import { Icon } from '../icons/Icon'
 import { useAnimationQueue } from '../utility/AnimationQueue'
@@ -23,6 +23,10 @@ export interface TimelineEvent {
   category: TimelineCategory
   icon: string
 }
+
+const YEAR_LABEL_ANIMATION_DURATION_MS = 600
+const YEAR_LINE_ANIMATION_DURATION_MS = 1000
+const EVENT_ANIMATION_DURATION_MS = 400
 
 export const Timeline = ({
   categories,
@@ -60,7 +64,7 @@ export const Timeline = ({
             key={`yearLine-${currentYear}`}
           >
             <ParallaxShow
-              transition="fade"
+              transition={<Zoom timeout={YEAR_LINE_ANIMATION_DURATION_MS} />}
               className={styles.verticalLineContainer}
               animationQueue={yearAnimationQueue}
             >
@@ -79,7 +83,10 @@ export const Timeline = ({
           style={{ gridRowStart: rowIndex++ }}
           key={`yearLabel-${rowIndex}`}
         >
-          <ParallaxShow transition="slide" direction="right" animationQueue={yearAnimationQueue}>
+          <ParallaxShow
+            transition={<Slide direction="right" timeout={YEAR_LABEL_ANIMATION_DURATION_MS} />}
+            animationQueue={yearAnimationQueue}
+          >
             <Typography>{currentYear}</Typography>
           </ParallaxShow>
         </div>,
@@ -107,7 +114,10 @@ export const Timeline = ({
               </Link>
             }
           >
-            <ParallaxShow animationQueue={eventAnimationQueue}>
+            <ParallaxShow
+              animationQueue={eventAnimationQueue}
+              transition={<Grow timeout={EVENT_ANIMATION_DURATION_MS} />}
+            >
               <Paper elevation={2}>
                 <Icon name={event.icon} className={styles.eventIcon} />
                 <Typography variant="h5" component="h3">
@@ -128,7 +138,12 @@ export const Timeline = ({
       style={{ gridRowStart: lastRow + 1, gridRowEnd: rowIndex++ + 1 }}
       key="futureYearLine"
     >
-      <div className={`${styles.verticalLine} ${styles.futureLine}`} />
+      <ParallaxShow
+        transition={<Zoom timeout={YEAR_LINE_ANIMATION_DURATION_MS} />}
+        animationQueue={yearAnimationQueue}
+      >
+        <div className={`${styles.verticalLine} ${styles.futureLine}`} />
+      </ParallaxShow>
     </div>,
   )
 

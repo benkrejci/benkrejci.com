@@ -1,10 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import { useIntersectionObserverRef } from 'rooks'
 
-type ZeroToOne = number
-
-const INTERSECTION_THRESHOLD: ZeroToOne = 0.5
-
 /**
  * Hook to track when ref element is visible in viewport or not
  * @returns [isVisible, triggerRef] - where isVisible is true if element is visible
