@@ -3,6 +3,7 @@ import { ReactElement } from 'react'
 import { fade, Link, makeStyles, Paper, Typography } from '@material-ui/core'
 
 import { Icon } from '../icons/Icon'
+import { useAnimationQueue } from '../utility/AnimationQueue'
 import { ExternalLink } from '../utility/ExternalLink'
 import { ParallaxShow } from '../utility/ParallaxShow'
 import { WrapIf } from '../utility/WrapIf'
@@ -31,6 +32,8 @@ export const Timeline = ({
   events: TimelineEvent[]
 }): ReactElement => {
   const styles = useStyles()
+  const yearAnimationQueue = useAnimationQueue()
+  const eventAnimationQueue = useAnimationQueue()
 
   const cells: ReactElement[] = []
 
@@ -56,7 +59,11 @@ export const Timeline = ({
             style={{ gridRowStart: lastRow + 1, gridRowEnd: rowIndex++ + 1 }}
             key={`yearLine-${currentYear}`}
           >
-            <ParallaxShow transition="fade" className={styles.verticalLineContainer}>
+            <ParallaxShow
+              transition="fade"
+              className={styles.verticalLineContainer}
+              animationQueue={yearAnimationQueue}
+            >
               <div className={styles.verticalLine} />
             </ParallaxShow>
           </div>,
@@ -72,7 +79,7 @@ export const Timeline = ({
           style={{ gridRowStart: rowIndex++ }}
           key={`yearLabel-${rowIndex}`}
         >
-          <ParallaxShow transition="slide" direction="right">
+          <ParallaxShow transition="slide" direction="right" animationQueue={yearAnimationQueue}>
             <Typography>{currentYear}</Typography>
           </ParallaxShow>
         </div>,
@@ -92,15 +99,15 @@ export const Timeline = ({
           }}
           key={`event-${rowIndex}`}
         >
-          <ParallaxShow>
-            <WrapIf
-              if={event.url}
-              wrapper={
-                <Link href={event.url} target="_blank" component={ExternalLink}>
-                  {' '}
-                </Link>
-              }
-            >
+          <WrapIf
+            if={event.url}
+            wrapper={
+              <Link href={event.url} target="_blank" component={ExternalLink}>
+                {' '}
+              </Link>
+            }
+          >
+            <ParallaxShow animationQueue={eventAnimationQueue}>
               <Paper elevation={2}>
                 <Icon name={event.icon} className={styles.eventIcon} />
                 <Typography variant="h5" component="h3">
@@ -108,8 +115,8 @@ export const Timeline = ({
                 </Typography>
                 <RichText>{event.description}</RichText>
               </Paper>
-            </WrapIf>
-          </ParallaxShow>
+            </ParallaxShow>
+          </WrapIf>
         </div>,
       )
     }
