@@ -5,7 +5,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/server.js",
-    "setup": "pm2 start npm --name casey.deployer -- run start && pm2 save && echo \"pm2 process started. Run `pm2 startup` if you haven't already to start on boot\""
+    "setup": "pm2 start npm --name ben.deployer -- run start && pm2 save && echo \"pm2 process started. Run `pm2 startup` if you haven't already to start on boot\""
   },
   "dependencies": {
     "@types/express": "^4.17.11",
