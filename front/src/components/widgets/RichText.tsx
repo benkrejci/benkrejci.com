@@ -27,19 +27,10 @@ const styles = (theme) => ({
 
 const options = {
   overrides: {
-    h1: {
-      component: Typography,
-      props: {
-        gutterBottom: true,
-        variant: 'h3',
-      },
-    },
-    h2: { component: Typography, props: { gutterBottom: true, variant: 'h4' } },
-    h3: { component: Typography, props: { gutterBottom: true, variant: 'h5' } },
-    h4: {
-      component: Typography,
-      props: { gutterBottom: true, variant: 'subtitle', paragraph: true },
-    },
+    h1: { component: Typography, props: { variant: 'h3' } },
+    h2: { component: Typography, props: { variant: 'h4' } },
+    h3: { component: Typography, props: { variant: 'h5' } },
+    h4: { component: Typography, props: { variant: 'subtitle1', paragraph: true } },
     p: { component: Typography, props: { paragraph: true } },
     a: { component: Link, props: { target: '_blank' } },
     img: {
@@ -51,8 +42,6 @@ const options = {
         />
       ),
     },
-    //ul: { component: List, props: { component: 'ul' } },
-    //ol: { component: List, props: { component: 'ol' } },
     li: {
       // @ts-ignore MUI TS bug
       component: withStyles(styles)(({ classes, ...props }) => (
