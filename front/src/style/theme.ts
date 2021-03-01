@@ -28,10 +28,12 @@ declare module '@material-ui/core/styles/createMuiTheme' {
   }
 }
 
-const primary = '#89beff'
-const secondary = '#c9ce78'
-const tertiary = '#e5a67f'
-const quarternary = '#86ccb5'
+const PRIMARY = '#89beff'
+const SECONDARY = '#c9ce78'
+const TERTIARY = '#e5a67f'
+const QUARTERNARY = '#86ccb5'
+const BACKGROUND_DEFAULT = 'rgba(24, 24, 24, 0.1)'
+const BACKGROUND_PAPER = 'rgba(28, 31, 49, 0.76)'
 
 export const theme = responsiveFontSizes(
   createMuiTheme({
@@ -53,28 +55,28 @@ export const theme = responsiveFontSizes(
     palette: {
       type: 'dark',
       primary: {
-        main: primary,
+        main: PRIMARY,
       },
       secondary: {
-        main: secondary,
+        main: SECONDARY,
       },
       tertiary: {
-        main: tertiary,
+        main: TERTIARY,
       },
       quarternary: {
-        main: quarternary,
+        main: QUARTERNARY,
       },
       text: {},
       background: {
-        default: 'rgba(24, 24, 24, 0.1)',
-        paper: 'rgba(28, 31, 49, 0.76)',
+        default: BACKGROUND_DEFAULT,
+        paper: BACKGROUND_PAPER,
       },
       tonalOffset: 0.2,
     },
 
     gradient: {
-      groovy: `linear-gradient(50deg, ${primary} 0%, ${secondary} 100%)`,
-      subdued: `linear-gradient(130deg, ${secondary} 0%, ${primary} 100%)`,
+      groovy: `linear-gradient(50deg, ${PRIMARY} 0%, ${SECONDARY} 100%)`,
+      subdued: `linear-gradient(130deg, ${SECONDARY} 0%, ${PRIMARY} 100%)`,
     },
 
     overrides: {
@@ -111,6 +113,18 @@ export const theme = responsiveFontSizes(
         // subtitle1: {
         //   color: secondary,
         // },
+      },
+
+      MuiOutlinedInput: {
+        root: {
+          backgroundColor: BACKGROUND_PAPER,
+        },
+      },
+
+      MuiInputLabel: {
+        outlined: {
+          backgroundColor: BACKGROUND_PAPER,
+        },
       },
     },
   }),

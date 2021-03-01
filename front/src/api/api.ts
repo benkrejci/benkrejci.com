@@ -8,8 +8,11 @@ export interface Response<T> {
 }
 
 export const EXTERNAL_API_SERVER = 'https://back.benkrejci.com'
+const IS_CLIENT = typeof window !== 'undefined'
 export const API_SERVER =
-  process.env.NODE_ENV === 'development' ? EXTERNAL_API_SERVER : 'http://localhost:1339'
+  IS_CLIENT || process.env.NODE_ENV === 'development'
+    ? EXTERNAL_API_SERVER
+    : 'http://localhost:1339'
 
 export const toSlug = (name: string) => encodeURIComponent(name.replace(/ /g, '-'))
 export const fromSlug = (slug: string) => decodeURIComponent(slug).replace(/-/g, ' ')
@@ -24,14 +27,25 @@ export async function get<T>(uri: string, params?: any): Promise<Response<T>> {
   }
 }
 
+export async function post<T>(uri: string, data?: any): Promise<Response<T>> {
+  try {
+    const response = await axios.post(`${API_SERVER}/${uri}`, data)
+    return { data: response.data }
+  } catch (error) {
+    return { error }
+  }
+}
+
 export interface Global {
   title: string
   socials: Social[]
   topNav: Page[]
 }
 
+export type SocialType = 'linkedin' | 'twitter' | 'instagram' | 'soundcloud'
+
 export interface Social {
-  type: 'linkedin' | 'twitter'
+  type: SocialType
   url: string
 }
 
@@ -63,6 +77,7 @@ export type Widget =
   | SocialWidget
   | ImageWidget
   | TimelineWidget
+  | ContactWidget
 
 export interface ProjectGridWidget {
   __component: 'widget.project-grid'
@@ -97,6 +112,11 @@ export interface ImageWidget {
   align: 'left' | 'center' | 'right'
 }
 
+export interface ContactWidget {
+  __component: 'widget.contact-form'
+  id: number
+}
+
 export interface TimelineWidget {
   __component: 'widget.timeline'
   id: number
@@ -123,19 +143,22 @@ export const getPage = async (
   return { data: response.data[0], error: response.error }
 }
 
-export interface Image extends ContentType {
+export interface File extends ContentType {
   name: string
   alternativeText: string
+  hash: string
+  mime: string
+  url: string
+  previewUrl: string | null
+  ext: string
+  size: number
+  provider: 'local'
+}
+
+export interface Image extends File {
   caption: string
   width: number
   height: number
-  hash: string
-  ext: string
-  mime: string
-  size: number
-  url: string
-  previewUrl: string | null
-  provider: 'local'
   formats: {
     [key in 'thumbnail' | 'small']: {
       name: string
@@ -151,13 +174,6 @@ export interface Image extends ContentType {
   }
 }
 
-export interface ProjectItem extends ContentType {
-  name: string
-  url: string
-  project: number
-  description: string
-}
-
 export interface Project extends ContentType {
   name: string
   url: string
@@ -165,6 +181,13 @@ export interface Project extends ContentType {
   company: string
   cover: Image
   project_items: ProjectItem[]
+}
+
+export interface ProjectItem extends ContentType {
+  name: string
+  url: string
+  project: number
+  description: string
 }
 
 export const getProjectUri = (project: Project) => `/portfolio/${toSlug(project.name)}`
@@ -178,3 +201,12 @@ export const getProject = async (
   const response = await getProjects(params)
   return { data: response.data[0], error: response.error }
 }
+
+export interface Contact {
+  name: string
+  email: string
+  subject: string
+  message: string
+}
+
+export const submitContact = (contact: Contact) => post('contacts', contact)

@@ -5,6 +5,7 @@ import { Box, Grid, Paper } from '@material-ui/core'
 import { Global, Widget } from '../../api/api'
 import { WrapIf } from '../../utility/WrapIf'
 import { Image } from '../Image'
+import { ContactForm } from './ContactForm'
 import { PortfolioGrid } from './PortfolioGrid'
 import { ProjectList } from './ProjectList'
 import { RichText } from './RichText'
@@ -46,16 +47,13 @@ export function Widgets({
                   return <Social socials={global.socials} wide />
 
                 case 'widget.image':
-                  return (
-                    <Image
-                      image={widget.image}
-                      align={widget.align}
-                      style={{ backgroundColor: 'transparent' }}
-                    />
-                  )
+                  return <Image image={widget.image} align={widget.align} />
 
                 case 'widget.timeline':
                   return <TimelineWidget {...widget} />
+
+                case 'widget.contact-form':
+                  return <ContactForm />
 
                 default:
                   console?.warn && console.warn(`Unknown widget component:`, widget)
