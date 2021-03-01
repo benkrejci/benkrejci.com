@@ -2,7 +2,7 @@ import { exec } from 'child_process'
 import express from 'express'
 import path from 'path'
 
-const PORT = 1338
+const PORT = 1340
 // only allow connections from localhost
 const HOST = 'localhost'
 
