@@ -5,9 +5,9 @@ import { CSSProperties } from '@material-ui/core/styles/withStyles'
 
 import { Icon } from '../../icons/Icon'
 import { useGlobalStyles } from '../../style/global'
-import { AnimationQueue } from '../../utility/AnimationQueue'
 import { ExternalLink } from '../../utility/ExternalLink'
-import { ParallaxShow } from '../../utility/ParallaxShow'
+import { ParallaxQueue } from '../../utility/ParallaxQueue'
+import { QueuedParallaxShow } from '../../utility/QueuedParallaxShow'
 import { WrapIf } from '../../utility/WrapIf'
 import { RichText } from '../widgets/RichText'
 import { EVENT_ANIMATION_DURATION_MS, EVENT_INTERSECTION_MARGIN, useTimelineStyles } from './styles'
@@ -15,12 +15,12 @@ import { TimelineEvent } from './types'
 
 export const Event = ({
   event,
+  parallaxQueue,
   style,
-  animationQueue,
 }: {
   event: TimelineEvent
+  parallaxQueue: ParallaxQueue
   style?: CSSProperties
-  animationQueue?: AnimationQueue
 }): ReactElement => {
   const globalStyles = useGlobalStyles()
   const styles = useTimelineStyles()
@@ -35,8 +35,8 @@ export const Event = ({
           </Link>
         }
       >
-        <ParallaxShow
-          animationQueue={animationQueue}
+        <QueuedParallaxShow
+          queue={parallaxQueue}
           transition={<Grow timeout={EVENT_ANIMATION_DURATION_MS} />}
           observerProps={{ rootMargin: EVENT_INTERSECTION_MARGIN }}
         >
@@ -48,7 +48,7 @@ export const Event = ({
             <Box className={globalStyles.visuallyHidden}>Category: {event.category.name}</Box>
             <RichText>{event.description}</RichText>
           </Paper>
-        </ParallaxShow>
+        </QueuedParallaxShow>
       </WrapIf>
     </div>
   )

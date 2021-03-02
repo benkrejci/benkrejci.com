@@ -1,29 +1,29 @@
-import React, { cloneElement, HTMLProps, ReactElement, useEffect, useRef, useState } from 'react'
+import React, { cloneElement, HTMLProps, ReactElement, useCallback, useState } from 'react'
 
-import { Grow, useForkRef } from '@material-ui/core'
+import { Grow } from '@material-ui/core'
 import { TransitionProps } from '@material-ui/core/transitions'
 
-import { isInView } from './isInView'
+import { ParallaxQueue } from './ParallaxQueue'
 
-export const ParallaxShow = <T extends TransitionProps>({
+export const QueuedParallaxShow = <T extends TransitionProps>({
   children,
+  queue,
   transition = <Grow />,
   observerProps,
   ...props
 }: {
   children: ReactElement
+  queue: ParallaxQueue
   transition?: ReactElement
   transitionProps?: Omit<T, 'in' & 'children'>
   observerProps?: IntersectionObserverInit
 } & HTMLProps<HTMLDivElement>): ReactElement => {
-  const [isVisible, inViewRef] = isInView({ threshold: 0, ...observerProps })
-  const queueRef = useRef<HTMLElement>()
-  const ref = useForkRef(queueRef, inViewRef)
   const [animateIn, setAnimateIn] = useState(false)
 
-  useEffect(() => {
-    setAnimateIn(isVisible)
-  }, [isVisible])
+  const ref = useCallback((node: HTMLElement) => {
+    if (node) queue.add(setAnimateIn, node)
+    else queue.remove(setAnimateIn)
+  }, [])
 
   return (
     <div ref={ref} {...props}>

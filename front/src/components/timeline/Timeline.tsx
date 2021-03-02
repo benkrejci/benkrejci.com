@@ -2,9 +2,8 @@ import { ReactElement } from 'react'
 
 import { fade } from '@material-ui/core'
 
-import { useGlobalStyles } from '../../style/global'
-import { useAnimationQueue } from '../../utility/AnimationQueue'
 import { isInView } from '../../utility/isInView'
+import { useParallaxQueue } from '../../utility/ParallaxQueue'
 import { CategoryHeader } from './CategoryHeader'
 import { CategoryLine } from './CategoryLine'
 import { Event } from './Event'
@@ -20,10 +19,9 @@ export const Timeline = ({
   categories: TimelineCategory[]
   events: TimelineEvent[]
 }): ReactElement => {
-  const globalStyles = useGlobalStyles()
   const styles = useTimelineStyles()
-  const yearAnimationQueue = useAnimationQueue()
-  const eventAnimationQueue = useAnimationQueue()
+  const yearParallaxQueue = useParallaxQueue()
+  const eventParallaxQueue = useParallaxQueue()
 
   const cells: ReactElement[] = []
 
@@ -46,7 +44,7 @@ export const Timeline = ({
         cells.push(
           <YearLine
             style={{ gridRowStart: lastRow + 1, gridRowEnd: rowIndex++ + 1 }}
-            animationQueue={yearAnimationQueue}
+            parallaxQueue={yearParallaxQueue}
             key={`yearLine-${currentYear}`}
           />,
         )
@@ -59,7 +57,7 @@ export const Timeline = ({
         <YearLabel
           year={currentYear}
           style={{ gridRowStart: rowIndex++ }}
-          animationQueue={yearAnimationQueue}
+          parallaxQueue={yearParallaxQueue}
           key={`yearLabel-${rowIndex}`}
         />,
       )
@@ -76,7 +74,7 @@ export const Timeline = ({
             gridRowEnd: rowIndex++,
             gridColumnStart: 2 + categoryIndex,
           }}
-          animationQueue={eventAnimationQueue}
+          parallaxQueue={eventParallaxQueue}
           key={`event-${rowIndex}`}
         />,
       )
@@ -87,6 +85,7 @@ export const Timeline = ({
   cells.push(
     <YearLine
       fadeOut
+      parallaxQueue={yearParallaxQueue}
       style={{ gridRowStart: lastRow + 1, gridRowEnd: rowIndex++ + 1 }}
       key="yearLine-future"
     />,
