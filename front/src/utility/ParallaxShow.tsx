@@ -1,8 +1,8 @@
 import React, {
-  cloneElement, HTMLProps, ReactElement, useCallback, useEffect, useState
+  cloneElement, HTMLProps, ReactElement, useCallback, useEffect, useRef, useState
 } from 'react'
 
-import { Grow } from '@material-ui/core'
+import { Grow, useForkRef } from '@material-ui/core'
 import { TransitionProps } from '@material-ui/core/transitions'
 
 import { AnimationQueue } from './AnimationQueue'
@@ -21,7 +21,9 @@ export const ParallaxShow = <T extends TransitionProps>({
   animationQueue?: AnimationQueue
   observerProps?: IntersectionObserverInit
 } & HTMLProps<HTMLDivElement>): ReactElement => {
-  const [isVisible, ref] = isInView({ threshold: 0, ...observerProps })
+  const [isVisible, inViewRef] = isInView({ threshold: 0, ...observerProps })
+  const queueRef = useRef<HTMLElement>()
+  const ref = useForkRef(queueRef, inViewRef)
   const [animateIn, setAnimateIn] = useState(false)
 
   const setAnimateInTrue = useCallback(() => setAnimateIn(true), [])
@@ -29,7 +31,7 @@ export const ParallaxShow = <T extends TransitionProps>({
   useEffect(() => {
     if (animationQueue) {
       if (isVisible) {
-        animationQueue.add(setAnimateInTrue)
+        animationQueue.add(setAnimateInTrue, queueRef)
       } else {
         animationQueue.remove(setAnimateInTrue)
         setAnimateIn(false)
