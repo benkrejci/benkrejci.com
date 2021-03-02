@@ -12,14 +12,16 @@ export const ParallaxShow = <T extends TransitionProps>({
   children,
   transition = <Grow />,
   animationQueue,
+  observerProps,
   ...props
 }: {
   children: ReactElement
   transition?: ReactElement
   transitionProps?: Omit<T, 'in' & 'children'>
   animationQueue?: AnimationQueue
+  observerProps?: IntersectionObserverInit
 } & HTMLProps<HTMLDivElement>): ReactElement => {
-  const [isVisible, ref] = isInView({ threshold: 0.3 })
+  const [isVisible, ref] = isInView({ threshold: 0, ...observerProps })
   const [animateIn, setAnimateIn] = useState(false)
 
   const setAnimateInTrue = useCallback(() => setAnimateIn(true), [])

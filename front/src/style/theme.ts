@@ -1,4 +1,4 @@
-import { createMuiTheme, PaletteColorOptions, responsiveFontSizes } from '@material-ui/core'
+import { createMuiTheme, fade, PaletteColorOptions, responsiveFontSizes } from '@material-ui/core'
 import { PaletteColor } from '@material-ui/core/styles/createPalette'
 
 declare module '@material-ui/core/styles/createPalette' {
@@ -17,6 +17,7 @@ declare module '@material-ui/core/styles/createMuiTheme' {
   interface TypeGradient {
     groovy: string
     subdued: string
+    darkRadial: string
   }
 
   interface Theme {
@@ -32,7 +33,8 @@ const PRIMARY = '#89beff'
 const SECONDARY = '#c9ce78'
 const TERTIARY = '#e5a67f'
 const QUARTERNARY = '#86ccb5'
-const BACKGROUND_DEFAULT = 'rgba(24, 24, 24, 0.1)'
+const BACKGROUND_DARK = 'rgba(1, 6, 18, 1)'
+const BACKGROUND_LIGHT = 'rgba(32, 21, 42, 1)'
 const BACKGROUND_PAPER = 'rgba(28, 31, 49, 0.76)'
 
 export const theme = responsiveFontSizes(
@@ -68,7 +70,7 @@ export const theme = responsiveFontSizes(
       },
       text: {},
       background: {
-        default: BACKGROUND_DEFAULT,
+        default: BACKGROUND_DARK,
         paper: BACKGROUND_PAPER,
       },
       tonalOffset: 0.2,
@@ -77,14 +79,14 @@ export const theme = responsiveFontSizes(
     gradient: {
       groovy: `linear-gradient(50deg, ${PRIMARY} 0%, ${SECONDARY} 100%)`,
       subdued: `linear-gradient(130deg, ${SECONDARY} 0%, ${PRIMARY} 100%)`,
+      darkRadial: `radial-gradient(${fade(BACKGROUND_DARK, 0.85)} 50%, transparent 100%)`,
     },
 
     overrides: {
       MuiCssBaseline: {
         '@global': {
           body: {
-            background:
-              'linear-gradient(0deg, rgb(32 21 42) 0%, rgb(1 11 34) 22%, rgb(1 6 18) 100%);',
+            background: `linear-gradient(0deg, ${BACKGROUND_LIGHT} 0%, rgb(1 11 34) 22%, ${BACKGROUND_DARK} 100%)`,
             backgroundAttachment: 'fixed',
           },
         },

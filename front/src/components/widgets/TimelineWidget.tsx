@@ -3,7 +3,7 @@ import React, { ReactElement } from 'react'
 import { Box, useTheme } from '@material-ui/core'
 
 import { TimelineEvent } from '../../api/api'
-import { Timeline } from '../Timeline'
+import { Timeline } from '../timeline/Timeline'
 import { RichText } from './RichText'
 
 export const TimelineWidget = ({
@@ -51,7 +51,7 @@ export const TimelineWidget = ({
     })
 
   return (
-    <Box m={2}>
+    <Box>
       <RichText>{description}</RichText>
       <Timeline events={events} categories={categories} />
     </Box>

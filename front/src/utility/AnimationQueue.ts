@@ -1,10 +1,11 @@
 import { useRef } from 'react'
 
-const DEFAULT_DELAY_MS = 140
+const DEFAULT_DELAY_MS = 200
 
 /**
  * Triggers animation events sequentially with some delay in-between starting each.
  * The more queued animations, the shorter the delay to the next one.
+ * @see https://www.desmos.com/calculator/gbvhcqhm3b
  */
 export class AnimationQueue {
   private targetDelayMs: number
@@ -45,7 +46,7 @@ export class AnimationQueue {
    * As queue.length → ∞, delay → 0
    */
   private getDelay(): number {
-    return this.targetDelayMs * Math.pow(0.8, this.queue.length)
+    return this.targetDelayMs * Math.pow(0.75, this.queue.length)
   }
 }
 
