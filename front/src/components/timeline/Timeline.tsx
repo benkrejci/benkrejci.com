@@ -1,13 +1,13 @@
 import { ReactElement } from 'react'
 
-import { fade } from '@material-ui/core'
+import { fade, Grow } from '@material-ui/core'
 
 import { isInView } from '../../utility/isInView'
 import { useParallaxQueue } from '../../utility/ParallaxQueue'
 import { CategoryHeader } from './CategoryHeader'
 import { CategoryLine } from './CategoryLine'
 import { Event } from './Event'
-import { useTimelineStyles } from './styles'
+import { CATEGORY_LINE_ANIMATION_DURATION_MS, useTimelineStyles } from './styles'
 import { TimelineCategory, TimelineEvent } from './types'
 import { YearLabel } from './YearLabel'
 import { YearLine } from './YearLine'
@@ -21,7 +21,7 @@ export const Timeline = ({
 }): ReactElement => {
   const styles = useTimelineStyles()
   const yearParallaxQueue = useParallaxQueue()
-  const eventParallaxQueue = useParallaxQueue()
+  const eventParallaxQueue = useParallaxQueue({ autoStart: false })
 
   const cells: ReactElement[] = []
 
@@ -93,6 +93,7 @@ export const Timeline = ({
 
   const stickyHeaders: ReactElement[] = []
   const [timelineInView, timelineRef] = isInView({ threshold: 0 })
+  console.log(`timelineInView: ${timelineInView}`)
 
   categories.forEach((category, categoryIndex) => {
     const gridColumnStart = 2 + categoryIndex
@@ -112,15 +113,21 @@ export const Timeline = ({
 
     // category line
     cells.push(
-      <CategoryLine
-        color={fade(category.color, 0.5)}
-        style={{
-          gridColumnStart,
-          gridRowStart: 2,
-          gridRowEnd: rowIndex,
-        }}
+      <Grow
+        in={timelineInView}
+        onEntered={() => eventParallaxQueue.resume()}
+        timeout={CATEGORY_LINE_ANIMATION_DURATION_MS}
         key={`categoryLine-${category.name}`}
-      />,
+      >
+        <CategoryLine
+          color={fade(category.color, 0.5)}
+          style={{
+            gridColumnStart,
+            gridRowStart: 2,
+            gridRowEnd: rowIndex,
+          }}
+        />
+      </Grow>,
     )
   })
 

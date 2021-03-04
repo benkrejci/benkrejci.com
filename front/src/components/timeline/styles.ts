@@ -3,6 +3,7 @@ import { fade, makeStyles } from '@material-ui/core'
 export const YEAR_LABEL_ANIMATION_DURATION_MS = 600
 export const YEAR_LINE_ANIMATION_DURATION_MS = 1400
 export const EVENT_ANIMATION_DURATION_MS = 400
+export const CATEGORY_LINE_ANIMATION_DURATION_MS = 400
 
 export const EVENT_INTERSECTION_MARGIN = '-72px 0px 0px 0px'
 

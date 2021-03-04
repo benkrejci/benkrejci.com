@@ -1,10 +1,16 @@
 import { useRef } from 'react'
 
-const DEFAULT_DELAY_MS = 160
+const DEFAULT_DELAY_MS = 200
 
-export const useParallaxQueue = (targetDelayMs?: number) => {
+export const useParallaxQueue = ({
+  targetDelayMs,
+  autoStart = true,
+}: {
+  targetDelayMs?: number
+  autoStart?: boolean
+} = {}) => {
   const ref = useRef<ParallaxQueue>()
-  if (!ref.current) ref.current = new ParallaxQueue()
+  if (!ref.current) ref.current = new ParallaxQueue({ autoStart })
   if (targetDelayMs !== undefined) ref.current.setTargetDelay(targetDelayMs)
   return ref.current
 }
@@ -50,27 +56,27 @@ interface ViewportEdges {
  * - at t2, elements e1 and e2 will be hidden immediately
  * - at t2, elements e4, e5, e6, e7 will be shown in that order
  *
- *                viewport at t1
+ *                     viewport at t1
  *                    /
  * +-----------------+
- * |                 |
- * |                 |
- * |                 |
- * | ######   ###### |
- * | # e1 #   # e2 # |     viewport at t2
- * | ######   ###### |         /
- * |        +-----------------+
- * |        | ###### | ###### |
- * |        | # e3 # | # e4 # |
- * |        | ###### | ###### |
- * +-----------------+        |
- *          |                 |
- *          | ######   ###### |
- *          | # e5 #   # e6 # |
- *          | ######   ###### |
- *          |     ######      |
- *          |     # e7 #      |
- *          +-----######------+
+ * |                 |\
+ * |                 | \
+ * |                 |  \
+ * | ######   ###### |   \
+ * | # e1 #   # e2 # |    \   viewport at t2
+ * | ######   ###### |     \ /
+ * |      +-----------------+
+ * |      |   ###### | ######
+ * |      |   # e3 # | # e4 #
+ * |      |   ###### | ######
+ * +-----------------+      |
+ *  \     |                 |
+ *   \    |   ######   ######
+ *    \   |   # e5 #   # e6 #
+ *     \  |   ######   ######
+ *      \ |       ######    |
+ *       \|       # e7 #    |
+ *        +-------######----+
  */
 export class ParallaxQueue {
   private targetDelayMs: number
@@ -80,17 +86,36 @@ export class ParallaxQueue {
   private elementBySetIsVisible: Map<SetIsVisibleFunc, Element> = new Map()
   private setIsVisibleByElement: Map<Element, SetIsVisibleFunc> = new Map()
   private lastViewportEdges: ViewportEdges
+  private paused: boolean
 
   /**
    * @param targetDelayMs delay between showing one element and the next approaches this value when
    *        there are few elements queued. @see {getDelay}
    * @param observerProps
    */
-  constructor(targetDelayMs: number = DEFAULT_DELAY_MS, observerProps?: IntersectionObserverInit) {
+  constructor({
+    targetDelayMs = DEFAULT_DELAY_MS,
+    observerProps,
+    autoStart = true,
+  }: {
+    targetDelayMs?: number
+    observerProps?: IntersectionObserverInit
+    autoStart?: boolean
+  } = {}) {
     this.targetDelayMs = targetDelayMs
     this.observer =
       typeof window !== 'undefined' &&
       new IntersectionObserver((entries) => this.intersect(entries), observerProps)
+    this.paused = !autoStart
+  }
+
+  public pause(): void {
+    this.paused = true
+  }
+
+  public resume(): void {
+    this.paused = false
+    this.next()
   }
 
   public add(setIsVisible: SetIsVisibleFunc, element: Element): void {
@@ -173,7 +198,7 @@ export class ParallaxQueue {
   }
 
   private next(): void {
-    if (!this.showQueue.length || this.nextTimeout !== null) return
+    if (this.paused || !this.showQueue.length || this.nextTimeout !== null) return
     this.showQueue.shift()(true)
     this.nextTimeout = setTimeout(() => {
       this.nextTimeout = null
