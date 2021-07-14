@@ -29,8 +29,9 @@ const options = {
   overrides: {
     h1: { component: Typography, props: { variant: 'h3', gutterBottom: true } },
     h2: { component: Typography, props: { variant: 'h4', gutterBottom: true } },
-    h3: { component: Typography, props: { variant: 'h5', gutterBottom: true } },
+    h3: { component: Typography, props: { variant: 'h5' } },
     h4: { component: Typography, props: { variant: 'subtitle1', paragraph: true } },
+    h5: { component: Typography, props: { variant: 'subtitle2', paragraph: true } },
     p: { component: Typography, props: { paragraph: true } },
     a: { component: Link, props: { target: '_blank' } },
     img: {
