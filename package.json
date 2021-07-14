@@ -7,6 +7,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
+    "build": "yarn workspace back build && yarn workspace deployer build && yarn workspace front build",
     "build:back": "yarn workspace back build",
     "build:deployer": "yarn workspace deployer build",
     "build:front": "yarn workspace front build",
