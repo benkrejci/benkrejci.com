@@ -114,10 +114,6 @@ export const theme = responsiveFontSizes(
         // subtitle1: {
         //   color: secondary,
         // },
-
-        paragraph: {
-          marginTop: '15px',
-        },
       },
 
       MuiOutlinedInput: {
