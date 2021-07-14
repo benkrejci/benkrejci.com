@@ -12,7 +12,7 @@ This package is divided into 3 yarn workspace packages:
 Install dependencies
 
 `yarn setup`
-Run backend and deployer setup for server
+Run backend and deployer setup for server (this configures pm2 to manage processes for each)
 
 `yarn build`
 Build all workspace packages
