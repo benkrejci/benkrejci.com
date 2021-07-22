@@ -1,6 +1,6 @@
 import { ReactElement, useRef } from 'react'
 
-import { fade, Grow } from '@material-ui/core'
+import { alpha, Grow } from '@material-ui/core'
 
 import { isInView } from '../../utility/isInView'
 import { useParallaxQueue } from '../../utility/ParallaxQueue'
@@ -131,7 +131,7 @@ export const Timeline = ({
         key={`categoryLine-${category.name}`}
       >
         <CategoryLine
-          color={fade(category.color, 0.5)}
+          color={alpha(category.color, 0.5)}
           style={{
             gridColumnStart,
             gridRowStart: 2,

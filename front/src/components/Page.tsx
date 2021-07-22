@@ -53,7 +53,7 @@ export function Page({
 
       <Container maxWidth="lg" className={styles.container}>
         <Box my={3} component="header">
-          <Grid container spacing={4} justify="space-between" alignItems="center">
+          <Grid container spacing={4} justifyContent="space-between" alignItems="center">
             <Grid item>
               <Link href="/" component={InternalLink} style={{ textDecoration: 'none' }}>
                 <Typography variant="h1" className={styles.headerTitle}>

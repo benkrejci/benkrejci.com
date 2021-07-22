@@ -37,7 +37,7 @@ export function Social({
         return (
           <Grid item key={social.type + i} xs={wide ? 12 : undefined}>
             <Link href={social.url} target="_blank" component={ExternalLink}>
-              <Grid container justify="flex-start" alignItems="center" spacing={2} wrap="nowrap">
+              <Grid container justifyContent="flex-start" alignItems="center" spacing={2} wrap="nowrap">
                 <Grid item xs={wide ? false : 12}>
                   <Icon
                     name={social.type}

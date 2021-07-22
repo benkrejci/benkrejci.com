@@ -45,7 +45,7 @@ export const Image = ({
   return (
     <Grid
       container
-      justify={align === 'left' ? 'flex-start' : align === 'right' ? 'flex-end' : 'center'}
+      justifyContent={align === 'left' ? 'flex-start' : align === 'right' ? 'flex-end' : 'center'}
       className={className}
       style={{ backgroundColor: theme.palette.background.paper, ...style }}
     >
