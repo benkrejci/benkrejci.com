@@ -21,5 +21,8 @@
   ],
   "devDependencies": {
     "prettier": "^2.2.1"
+  },
+  "dependencies": {
+    "strapi": "3.6"
   }
 }

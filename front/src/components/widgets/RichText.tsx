@@ -8,10 +8,24 @@ import { EXTERNAL_API_SERVER } from '../../api/api'
 export function RichText({
   content,
   children,
+  topHeadingLevel = 2,
+  topHeadingVariantLevel = 4,
 }: {
   content?: string
   children?: string
+  topHeadingLevel?: number
+  topHeadingVariantLevel?: number
 }): ReactElement {
+  const options = { ...DEFAULT_OPTIONS }
+
+  // start the heading levels at top and work down to h5
+  for (let inLevel = 1; inLevel <= 5; inLevel++) {
+    const outLevel = inLevel - 1 + topHeadingLevel
+    const outVariantLevel = inLevel - 1 + topHeadingVariantLevel
+    options.overrides[`h${inLevel}`].props.component = `h${outLevel}`
+    options.overrides[`h${inLevel}`].props.variant = `h${outVariantLevel}`
+  }
+
   return (
     <Typography variant="body1" component="div">
       <Markdown options={options}>{children || content || ''}</Markdown>
@@ -25,7 +39,7 @@ const styles = (theme) => ({
   },
 })
 
-const options = {
+const DEFAULT_OPTIONS = {
   overrides: {
     h1: { component: Typography, props: { component: 'h1', variant: 'h3', gutterBottom: true } },
     h2: { component: Typography, props: { component: 'h2', variant: 'h4', gutterBottom: true } },
