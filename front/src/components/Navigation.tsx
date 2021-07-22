@@ -51,11 +51,12 @@ const useStyles = makeStyles((theme) => {
   const yPadding = 8
   const xPadding = 18
   const xSpaceBetween = 26
+  const ySpaceBetween = 4
   return {
     navWrapper: {
       display: 'flex',
-      flexWrap: 'nowrap',
-      margin: `0 ${-xSpaceBetween / 2}px`,
+      flexWrap: 'wrap',
+      margin: `${-ySpaceBetween}px ${-xSpaceBetween / 2}px`,
       padding: 0,
     },
 
@@ -66,7 +67,7 @@ const useStyles = makeStyles((theme) => {
       // Distance from edge of text to next button edge (halfway between the two)
       // should be xSpaceBetween / 2. Subtract distance already travelled via
       // padding. This will end up being negative (inactive buttons will overlap)
-      margin: `0 ${xSpaceBetween / 2 - xPadding}px`,
+      margin: `${ySpaceBetween}px ${xSpaceBetween / 2 - xPadding}px`,
     },
 
     beforeButton: {
@@ -80,7 +81,7 @@ const useStyles = makeStyles((theme) => {
     activeButton: {
       // Distance from border to next button edge (halfway between the two)
       // should be xSpaceBetween / 2.
-      margin: `0 ${xSpaceBetween / 2}px`,
+      margin: `${ySpaceBetween}px ${xSpaceBetween / 2}px`,
       padding: `${yPadding}px ${xPadding}px`,
       background: theme.gradient.groovy,
       color: theme.palette.getContrastText(theme.palette.primary.main),
