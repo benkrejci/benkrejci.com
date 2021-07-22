@@ -1,4 +1,4 @@
-import { ReactElement } from 'react'
+import { ReactElement, useRef } from 'react'
 
 import { fade, Grow } from '@material-ui/core'
 
@@ -11,6 +11,8 @@ import { CATEGORY_LINE_ANIMATION_DURATION_MS, useTimelineStyles } from './styles
 import { TimelineCategory, TimelineEvent } from './types'
 import { YearLabel } from './YearLabel'
 import { YearLine } from './YearLine'
+import { useBoundingclientrect } from 'rooks'
+import { useRect } from '../../utility/useRect'
 
 export const Timeline = ({
   categories,
@@ -21,7 +23,16 @@ export const Timeline = ({
 }): ReactElement => {
   const styles = useTimelineStyles()
   const yearParallaxQueue = useParallaxQueue()
-  const eventParallaxQueue = useParallaxQueue({ autoStart: false })
+  const headerRef = useRef()
+  const headerRect = useRect(headerRef)
+  const eventParallaxQueue = useParallaxQueue({
+    autoStart: false,
+    observerProps: {
+      threshold: 1,
+      // allow room for header
+      rootMargin: `-${headerRect?.height || 0}px 0px 0px 0px`,
+    },
+  })
 
   const cells: ReactElement[] = []
 
@@ -93,7 +104,6 @@ export const Timeline = ({
 
   const stickyHeaders: ReactElement[] = []
   const [timelineInView, timelineRef] = isInView({ threshold: 0 })
-  console.log(`timelineInView: ${timelineInView}`)
 
   categories.forEach((category, categoryIndex) => {
     const gridColumnStart = 2 + categoryIndex
@@ -107,6 +117,7 @@ export const Timeline = ({
           gridColumnStart,
           gridRowStart: 1,
         }}
+        ref={headerRef}
         key={`categoryHeader-${category.name}`}
       />,
     )

@@ -1,4 +1,4 @@
-import { ReactElement, useRef } from 'react'
+import { forwardRef, ReactElement, useRef } from 'react'
 import { useForkRef } from 'rooks'
 
 import { Typography } from '@material-ui/core'
@@ -9,21 +9,22 @@ import { useRect } from '../../utility/useRect'
 import { useTimelineStyles } from './styles'
 import { TimelineCategory } from './types'
 
-export const CategoryHeader = ({
-  category,
-  stickyHeaderEnabled,
-  style,
-}: {
+export const CategoryHeader = forwardRef<HTMLElement, {
   category: TimelineCategory
   stickyHeaderEnabled?: boolean
   style?: CSSProperties
-}): ReactElement => {
+}>(({
+  category,
+  stickyHeaderEnabled,
+  style,
+}, outerRef): ReactElement => {
   const styles = useTimelineStyles()
 
   const [categoryInView, inViewRef] = isInView({ threshold: 1 })
   const rectRef = useRef()
   const headerRect = useRect(rectRef)
-  const headerRef = useForkRef(inViewRef, rectRef)
+  const tempRef = useForkRef(inViewRef, rectRef)
+  const headerRef = useForkRef(tempRef, outerRef)
 
   return (
     <>
@@ -54,4 +55,4 @@ export const CategoryHeader = ({
       </div>
     </>
   )
-}
+})

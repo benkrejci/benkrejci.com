@@ -1,18 +1,27 @@
 import { useRef } from 'react'
+import { isEqual } from 'lodash'
 
 const DEFAULT_DELAY_MS = 200
 
 export const useParallaxQueue = ({
   targetDelayMs,
   autoStart = true,
+  observerProps,
 }: {
   targetDelayMs?: number
   autoStart?: boolean
+  observerProps?: IntersectionObserverInit
 } = {}) => {
-  const ref = useRef<ParallaxQueue>()
-  if (!ref.current) ref.current = new ParallaxQueue({ autoStart })
-  if (targetDelayMs !== undefined) ref.current.setTargetDelay(targetDelayMs)
-  return ref.current
+  const observerPropsRef = useRef<IntersectionObserverInit>(observerProps)
+  const queueRef = useRef<ParallaxQueue>()
+  if (!queueRef.current) queueRef.current = new ParallaxQueue({ autoStart, observerProps })
+  // if observerProps have changed, re-init
+  else if (!isEqual(observerPropsRef.current, observerProps)) {
+    observerPropsRef.current = observerProps
+    queueRef.current.reInitObserver(observerProps)
+  }
+  if (targetDelayMs !== undefined) queueRef.current.setTargetDelay(targetDelayMs)
+  return queueRef.current
 }
 
 type SetIsVisibleFunc = (boolean) => void
@@ -51,7 +60,7 @@ interface ViewportEdges {
  * thus calculated manually to match the order of appearance that would be expected based on window
  * resize or scroll.
  *
- * Consider the follwing situation:
+ * Consider the following situation:
  * - browser viewport is instantaneously scrolled from shown position at t1 to shown position at t2
  * - at t2, elements e1 and e2 will be hidden immediately
  * - at t2, elements e4, e5, e6, e7 will be shown in that order
@@ -87,6 +96,7 @@ export class ParallaxQueue {
   private setIsVisibleByElement: Map<Element, SetIsVisibleFunc> = new Map()
   private lastViewportEdges: ViewportEdges
   private paused: boolean
+  private rootMargin: { top: number; right: number; bottom: number; left: number }
 
   /**
    * @param targetDelayMs delay between showing one element and the next approaches this value when
@@ -103,9 +113,9 @@ export class ParallaxQueue {
     autoStart?: boolean
   } = {}) {
     this.targetDelayMs = targetDelayMs
-    this.observer =
-      typeof window !== 'undefined' &&
-      new IntersectionObserver((entries) => this.intersect(entries), observerProps)
+
+    this.initObserver(observerProps)
+
     this.paused = !autoStart
   }
 
@@ -137,6 +147,47 @@ export class ParallaxQueue {
     this.targetDelayMs = delayMs
   }
 
+  public reInitObserver(observerProps: IntersectionObserverInit) {
+    this.observer.disconnect()
+    this.initObserver(observerProps)
+  }
+
+  private initObserver(observerProps: IntersectionObserverInit): void {
+    this.observer =
+      typeof window !== 'undefined' &&
+      new IntersectionObserver((entries) => this.intersect(entries), observerProps)
+    
+    // if there are already elements to observe (in case of re-init), observe again
+    this.elementBySetIsVisible.forEach((element) => this.observer.observe(element))
+
+    const rootMarginParts = (observerProps?.rootMargin || '0px').split(' ').map((part) => {
+      if (part.match(/^-?\d+px$/)) return parseInt(part)
+      throw new TypeError(`Invalid rootMargin value for ParallaxQueue "${part}", only px allowed`)
+    })
+    if (rootMarginParts.length === 1) {
+      this.rootMargin = {
+        top: rootMarginParts[0],
+        right: rootMarginParts[0],
+        bottom: rootMarginParts[0],
+        left: rootMarginParts[0],
+      }
+    } else if (rootMarginParts.length === 2) {
+      this.rootMargin = {
+        top: rootMarginParts[0],
+        right: rootMarginParts[1],
+        bottom: rootMarginParts[0],
+        left: rootMarginParts[1],
+      }
+    } else {
+      this.rootMargin = {
+        top: rootMarginParts[0],
+        right: rootMarginParts[1],
+        bottom: rootMarginParts[2] || 0,
+        left: rootMarginParts[3] || 0,
+      }
+    }
+  }
+
   private intersect(entries: IntersectionObserverEntry[]): void {
     const lastViewportEdges = this.lastViewportEdges
     const viewportEdges = this.getViewportEdges()
@@ -165,10 +216,10 @@ export class ParallaxQueue {
 
   private getViewportEdges(): ViewportEdges {
     return {
-      top: window.pageYOffset,
-      left: window.pageXOffset,
-      bottom: window.pageYOffset + document.documentElement.clientHeight,
-      right: window.pageXOffset + document.documentElement.clientWidth,
+      top: window.pageYOffset - this.rootMargin.top,
+      left: window.pageXOffset - this.rootMargin.left,
+      bottom: window.pageYOffset - this.rootMargin.bottom + document.documentElement.clientHeight,
+      right: window.pageXOffset - this.rootMargin.right + document.documentElement.clientWidth,
     }
   }
 
