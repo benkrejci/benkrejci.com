@@ -1,5 +1,3 @@
-require('dotenv').config({ path: '../.env' })
-
 // The rest mostly copied from https://nextjs.org/docs/advanced-features/custom-server
 const { createServer } = require('http')
 const { parse } = require('url')

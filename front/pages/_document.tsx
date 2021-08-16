@@ -1,5 +1,3 @@
-require('dotenv').config({ path: '../.env' })
-
 import Document, { Head, Html, Main, NextScript } from 'next/document'
 /* basically copied from https://github.com/mui-org/material-ui/blob/master/examples/nextjs/pages/_document.js */
 import React from 'react'

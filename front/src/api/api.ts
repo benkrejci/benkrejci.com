@@ -7,7 +7,7 @@ export interface Response<T> {
   error?: string
 }
 
-export const EXTERNAL_API_SERVER = process.env.BACK_EXTERNAL_URL
+export const EXTERNAL_API_SERVER = process.env.NEXT_PUBLIC_BACK_EXTERNAL_URL
 const IS_CLIENT = typeof window !== 'undefined'
 export const API_SERVER =
   IS_CLIENT || process.env.NODE_ENV === 'development'
