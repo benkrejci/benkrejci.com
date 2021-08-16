@@ -4,8 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build && next export",
-    "start": "next start",
+    "build": "next build",
+    "reload": "next build && pm2 reload ben.front",
+    "start": "NODE_ENV=production node server.js",
+    "setup": "pm2 start npm --name ben.front -- run start && pm2 save && echo \"pm2 process started. Run `pm2 startup` if you haven't already to start on boot\"",
     "export": "next export"
   },
   "dependencies": {
@@ -17,6 +19,7 @@
     "@svgr/webpack": "^5.5.0",
     "@types/node": "^16.4.0",
     "axios": "^0.21.1",
+    "dotenv": "^10.0.0",
     "markdown-to-jsx": "^7.1.1",
     "material-ui-image": "^3.3.1",
     "next": "11.0.1",

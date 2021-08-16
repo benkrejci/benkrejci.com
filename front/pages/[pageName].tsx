@@ -12,6 +12,7 @@ export default function OtherPage(props: PageProps): ReactElement {
 export const getStaticProps: GetStaticProps = async (context) => {
   return {
     props: await getPageProps(context),
+    revalidate: 1,
   }
 }
 

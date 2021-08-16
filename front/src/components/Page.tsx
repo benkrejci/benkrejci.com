@@ -12,9 +12,11 @@ import { InternalLink } from '../utility/InternalLink'
 import { Navigation } from './Navigation'
 import { Social } from './widgets/Social'
 import { Widgets } from './widgets/Widgets'
+import { PreviewModeBar } from './PreviewModeBar'
 
 export function Page({
   global,
+  preview,
   title,
   description,
   header,
@@ -22,6 +24,7 @@ export function Page({
   children,
 }: {
   global: Global
+  preview: boolean
   title?: string
   description?: string
   header?: ReactElement
@@ -50,6 +53,8 @@ export function Page({
         </title>
         {description ? <meta name="description" content={description} /> : ''}
       </Head>
+
+      {preview ? <PreviewModeBar /> : null}
 
       <Container maxWidth="lg" className={styles.container}>
         <Box my={3} component="header">

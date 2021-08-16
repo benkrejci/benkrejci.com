@@ -67,7 +67,9 @@ export const theme = responsiveFontSizes(
       quarternary: {
         main: QUARTERNARY,
       },
-      text: {},
+      text: {
+        secondary: 'black',
+      },
       background: {
         default: BACKGROUND_DARK,
         paper: BACKGROUND_PAPER,

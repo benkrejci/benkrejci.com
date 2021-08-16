@@ -2,7 +2,10 @@ import { exec } from 'child_process'
 import express from 'express'
 import path from 'path'
 
-const PORT = 1340
+require('dotenv').config({ path: '../.env' })
+
+if (process.env.DEPLOYER_PORT === undefined) throw Error('Missing PORT environment variable')
+const PORT = parseInt(process.env.DEPLOYER_PORT as string)
 // only allow connections from localhost
 const HOST = 'localhost'
 
@@ -45,7 +48,7 @@ app.post<BuildHookParams>('/build_hook', (request, response) => {
 
 function build() {
   buildInProgress = true
-  exec('yarn build', { cwd: path.join(__dirname, '../../front') }, (error, stdout, stderr) => {
+  exec(`yarn reload`, { cwd: path.join(__dirname, '../../front') }, (error, stdout, stderr) => {
     if (error) {
       console.error(`Export failed 😒: ${stderr}`)
     } else {

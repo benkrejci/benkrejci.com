@@ -20,7 +20,6 @@ export const fromSlug = (slug: string) => decodeURIComponent(slug).replace(/-/g,
 export async function get<T>(uri: string, params?: any): Promise<Response<T>> {
   try {
     const response = await axios.get(`${API_SERVER}/${uri}`, { params })
-    //console.log(JSON.stringify(response.data, null, 2))
     return { data: response.data }
   } catch (error) {
     return { error }
@@ -134,12 +133,14 @@ export interface TimelineEvent {
   description: string
 }
 
-export const getPages = async (params?: any): Promise<Response<Page[]>> => get('pages')
+export const getPages = async (params?: any, preview: boolean = false): Promise<Response<Page[]>> =>
+  get('pages', params) //, preview ? { status: 'draft' } : undefined)
 
 export const getPage = async (
   params: { id: number } | { name: string },
+  preview: boolean,
 ): Promise<Response<Page>> => {
-  const response = await getPages(params)
+  const response = await getPages(params, preview)
   return { data: response.data[0], error: response.error }
 }
 
