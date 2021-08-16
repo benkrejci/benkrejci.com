@@ -4,7 +4,7 @@ import { getPage } from "../../src/api/api"
 export default async (req, res) => {
   // Check the secret and next parameters
   // This secret should only be known to this API route and the CMS
-  if (req.query.secret !== process.env.PREVIEW_SECRET || !req.query.id || !req.query.contentType) {
+  if (req.query.secret !== process.env.SECRET || !req.query.id || !req.query.contentType) {
     return res.status(401).json({ message: 'Invalid token' })
   }
 
@@ -14,7 +14,7 @@ export default async (req, res) => {
 
   // Fetch the headless CMS to check if the provided `slug` exists
   // getPostBySlug would implement the required fetching logic to the headless CMS
-  const page = await getPage({ id: req.query.id }, true)
+  const page = await getPage({ id: req.query.id })
 
   // If the slug doesn't exist prevent preview mode from being enabled
   if (!page) {

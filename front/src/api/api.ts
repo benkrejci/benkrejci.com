@@ -7,12 +7,12 @@ export interface Response<T> {
   error?: string
 }
 
-export const EXTERNAL_API_SERVER = 'https://back.benkrejci.com'
+export const EXTERNAL_API_SERVER = process.env.BACK_EXTERNAL_URL
 const IS_CLIENT = typeof window !== 'undefined'
 export const API_SERVER =
   IS_CLIENT || process.env.NODE_ENV === 'development'
     ? EXTERNAL_API_SERVER
-    : 'http://localhost:1339'
+    : `http://localhost:${process.env.BACK_PORT}`
 
 export const toSlug = (name: string) => encodeURIComponent(name.replace(/ /g, '-'))
 export const fromSlug = (slug: string) => decodeURIComponent(slug).replace(/-/g, ' ')
@@ -134,13 +134,12 @@ export interface TimelineEvent {
 }
 
 export const getPages = async (params?: any, preview: boolean = false): Promise<Response<Page[]>> =>
-  get('pages', params) //, preview ? { status: 'draft' } : undefined)
+  get('pages', params)
 
 export const getPage = async (
   params: { id: number } | { name: string },
-  preview: boolean,
 ): Promise<Response<Page>> => {
-  const response = await getPages(params, preview)
+  const response = await getPages(params)
   return { data: response.data[0], error: response.error }
 }
 

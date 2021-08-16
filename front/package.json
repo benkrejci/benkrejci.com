@@ -8,6 +8,7 @@
     "reload": "next build && pm2 reload ben.front",
     "start": "NODE_ENV=production node server.js",
     "setup": "pm2 start npm --name ben.front -- run start && pm2 save && echo \"pm2 process started. Run `pm2 startup` if you haven't already to start on boot\"",
+    "postbuild": "next-sitemap",
     "export": "next export"
   },
   "dependencies": {
