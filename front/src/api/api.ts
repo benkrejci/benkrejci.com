@@ -111,7 +111,7 @@ export interface SocialWidget {
 export interface ImageWidget {
   __component: 'widget.image'
   id: number
-  image: Image
+  image: File
   align: 'left' | 'center' | 'right'
 }
 

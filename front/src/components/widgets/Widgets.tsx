@@ -47,7 +47,7 @@ export function Widgets({
                   return <Social socials={global.socials} wide />
 
                 case 'widget.image':
-                  return <Media image={widget.image} align={widget.align} />
+                  return <Media file={widget.image} align={widget.align} />
 
                 case 'widget.timeline':
                   return <TimelineWidget {...widget} />
