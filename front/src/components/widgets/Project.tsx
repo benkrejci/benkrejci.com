@@ -7,7 +7,7 @@ import { Project as ProjectModel } from '../../api/api'
 import { useGlobalStyles } from '../../style/global'
 import { ExternalLink } from '../../utility/ExternalLink'
 import { WrapIf } from '../../utility/WrapIf'
-import { Image } from '../Image'
+import { Media } from '../Media'
 import { RichText } from './RichText'
 
 export const Project = ({ project }: { project: ProjectModel }): ReactElement => {
@@ -22,15 +22,15 @@ export const Project = ({ project }: { project: ProjectModel }): ReactElement =>
             <div className={styles.cover}>
               <Paper elevation={1}>
                 <WrapIf
-                  if={project.url}
+                  if={project.url && project.cover?.mime?.startsWith('image/')}
                   wrapper={
                     <Link href={project.url} target="_blank" component={ExternalLink}>
                       {' '}
                     </Link>
                   }
                 >
-                  <Image
-                    image={project.cover}
+                  <Media
+                    file={project.cover}
                     maxHeight="60vh"
                     style={{ backgroundColor: 'transparent' }}
                   />
@@ -87,40 +87,14 @@ const useStyles = makeStyles((theme) => ({
   },
 
   [theme.breakpoints.up('sm')]: {
+    title: {
+      overflowWrap: 'anywhere',
+    },
     cover: {
       float: 'right',
-      width: '33%',
-      minWidth: '300px',
+      width: '500px',
+      maxWidth: '50%',
       marginLeft: theme.spacing(2),
     },
   },
-  // container: {
-  //   display: 'grid',
-  //   columnGap: theme.spacing(4),
-  //   [theme.breakpoints.down('xs')]: {
-  //     gridTemplateColumns: 'auto',
-  //     gridTemplateRows: 'repeat(3, auto)',
-  //     gridTemplateAreas: `"title" "cover" "description"`,
-  //   },
-  //   [theme.breakpoints.up('sm')]: {
-  //     gridTemplateColumns: 'auto 50%',
-  //     gridTemplateRows: 'auto auto',
-  //     gridTemplateAreas: `
-  //       "title cover"
-  //       "description cover"
-  //     `,
-  //   },
-  //   [theme.breakpoints.up('md')]: {
-  //     gridTemplateColumns: 'auto 33%',
-  //   },
-  // },
-  // title: {
-  //   gridArea: 'title',
-  // },
-  // cover: {
-  //   gridArea: 'cover',
-  // },
-  // description: {
-  //   gridArea: 'description',
-  // },
 }))

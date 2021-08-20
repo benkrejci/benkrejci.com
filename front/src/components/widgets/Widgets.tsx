@@ -4,7 +4,7 @@ import { Box, Grid, Paper } from '@material-ui/core'
 
 import { Global, Widget } from '../../api/api'
 import { WrapIf } from '../../utility/WrapIf'
-import { Image } from '../Image'
+import { Media } from '../Media'
 import { ContactForm } from './ContactForm'
 import { PortfolioGrid } from './PortfolioGrid'
 import { ProjectList } from './ProjectList'
@@ -47,7 +47,7 @@ export function Widgets({
                   return <Social socials={global.socials} wide />
 
                 case 'widget.image':
-                  return <Image image={widget.image} align={widget.align} />
+                  return <Media image={widget.image} align={widget.align} />
 
                 case 'widget.timeline':
                   return <TimelineWidget {...widget} />

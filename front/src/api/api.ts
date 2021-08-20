@@ -8,6 +8,10 @@ export interface Response<T> {
 }
 
 export const EXTERNAL_API_SERVER = process.env.NEXT_PUBLIC_BACK_EXTERNAL_URL
+if (!EXTERNAL_API_SERVER)
+  throw Error(
+    'No NEXT_PUBLIC_BACK_EXTERNAL_API_SERVER env variable, please run `yarn setup:dev` or `yarn setup` to initialize default env variables',
+  )
 const IS_CLIENT = typeof window !== 'undefined'
 export const API_SERVER =
   IS_CLIENT || process.env.NODE_ENV === 'development'
@@ -143,19 +147,7 @@ export const getPage = async (
   return { data: response.data[0], error: response.error }
 }
 
-export interface File extends ContentType {
-  name: string
-  alternativeText: string
-  hash: string
-  mime: string
-  url: string
-  previewUrl: string | null
-  ext: string
-  size: number
-  provider: 'local'
-}
-
-export interface Image extends File {
+export interface Image {
   caption: string
   width: number
   height: number
@@ -174,12 +166,24 @@ export interface Image extends File {
   }
 }
 
+export type File = ContentType & Partial<Image> & {
+  name: string
+  alternativeText: string
+  hash: string
+  mime: string
+  url: string
+  previewUrl: string | null
+  ext: string
+  size: number
+  provider: 'local'
+}
+
 export interface Project extends ContentType {
   name: string
   url: string
   description: string
   company: string
-  cover: Image
+  cover: File
   project_items: ProjectItem[]
 }
 
