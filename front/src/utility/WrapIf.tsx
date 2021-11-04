@@ -4,6 +4,7 @@ export const WrapIf = forwardRef(
   (
     {
       children,
+      if: ifProp,
       wrap,
       wrapper,
       ...props
@@ -20,7 +21,7 @@ export const WrapIf = forwardRef(
     } & HTMLProps<HTMLElement>,
     ref,
   ): ReactElement => {
-    if (props.if) {
+    if (ifProp) {
       if (typeof wrapper === 'function') {
         return <>{wrapper(children, props, ref)}</>
       } else if (wrapper) {

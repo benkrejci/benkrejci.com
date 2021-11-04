@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import { CssBaseline, ThemeProvider } from '@material-ui/core'
 
 import { theme } from '../src/style/theme'
+import { FragmentGeneratorProvider } from '../src/utility/FragmentGenerator'
 
 export default function MyApp({ Component, pageProps }) {
   useEffect(() => {
@@ -20,8 +21,10 @@ export default function MyApp({ Component, pageProps }) {
         <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
       </Head>
       <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Component {...pageProps} />
+        <FragmentGeneratorProvider>
+          <CssBaseline />
+          <Component {...pageProps} />
+        </FragmentGeneratorProvider>
       </ThemeProvider>
     </>
   )

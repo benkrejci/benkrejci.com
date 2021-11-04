@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import { ReactElement } from 'react'
+import { ReactElement, ReactNode } from 'react'
 
 import { Grid, Hidden, Link, makeStyles } from '@material-ui/core'
 import Box from '@material-ui/core/Box'
@@ -29,10 +29,10 @@ export function Page({
   description?: string
   header?: ReactElement
   footer?: ReactElement
-  children?: ReactElement | ReactElement[] | string
+  children?: ReactNode
 }): ReactElement {
   const router = useRouter()
-  const matchingSlug = (router.asPath.charAt(0) === '/' && router.asPath.slice(1)) || 'home'
+  const matchingSlug = (router.pathname.charAt(0) === '/' && router.query.pageName) || 'home'
   const currentPage = global.topNav.find((page) => matchingSlug === page.slug)
 
   title = title || currentPage?.title || ''

@@ -45,14 +45,10 @@ export interface Global {
   topNav: Page[]
 }
 
-export type SocialType = 'linkedin' | 'twitter' | 'instagram' | 'soundcloud'
-
 export interface Social {
-  type: SocialType
+  type: string
   url: string
 }
-
-export const getGlobal = async (): Promise<Response<Global>> => get('global')
 
 export interface ContentType {
   id: number
@@ -137,8 +133,59 @@ export interface TimelineEvent {
   description: string
 }
 
-export const getPages = async (params?: any, preview: boolean = false): Promise<Response<Page[]>> =>
-  get('pages', params)
+export const getGlobal = async (): Promise<Response<Global>> => {
+  const response = await get<Global>('global')
+  return {
+    ...response,
+    data: {
+      ...response.data,
+      topNav: await mapPages(response.data.topNav),
+    },
+  }
+}
+
+export const getPages = async (
+  params?: any,
+  preview: boolean = false,
+): Promise<Response<Page[]>> => {
+  const response = await get<Page[]>('pages', params)
+  return {
+    ...response,
+    data: await mapPages(response.data),
+  }
+}
+
+const mapPages = (pages: Page[]): Promise<Page[]> =>
+  Promise.all(
+    pages.map(
+      async (page): Promise<Page> => ({
+        ...page,
+        topWidgets: await mapWidgets(page.topWidgets),
+        bottomWidgets: await mapWidgets(page.bottomWidgets),
+        leftWidgets: await mapWidgets(page.leftWidgets),
+        rightWidgets: await mapWidgets(page.rightWidgets),
+      }),
+    ),
+  )
+
+const mapWidgets = (widgets: Widget[]): Promise<Widget[]> =>
+  Promise.all(
+    widgets.map(async (widget) => {
+      switch (widget.__component) {
+        case 'widget.project-list':
+          return {
+            ...widget,
+            projects: (
+              await getProjects({
+                id_in: widget.projects.map((project) => project.id),
+              })
+            ).data,
+          }
+        default:
+          return widget
+      }
+    }),
+  )
 
 export const getPage = async (
   params: { id: number } | { name: string },
@@ -166,35 +213,32 @@ export interface Image {
   }
 }
 
-export type File = ContentType & Partial<Image> & {
-  name: string
-  alternativeText: string
-  hash: string
-  mime: string
-  url: string
-  previewUrl: string | null
-  ext: string
-  size: number
-  provider: 'local'
-}
+export type File = ContentType &
+  Partial<Image> & {
+    name: string
+    alternativeText: string
+    hash: string
+    mime: string
+    url: string
+    previewUrl: string | null
+    ext: string
+    size: number
+    provider: 'local'
+  }
 
 export interface Project extends ContentType {
   name: string
   url: string
   description: string
-  company: string
   cover: File
-  project_items: ProjectItem[]
+  links?: ProjectLink[]
 }
 
-export interface ProjectItem extends ContentType {
-  name: string
+export interface ProjectLink {
+  label: string
   url: string
-  project: number
-  description: string
+  icon: string
 }
-
-export const getProjectUri = (project: Project) => `/portfolio/${toSlug(project.name)}`
 
 export const getProjects = async (params?: any): Promise<Response<Project[]>> =>
   get('projects', { ...params })
