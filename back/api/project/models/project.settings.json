@@ -26,10 +26,16 @@
         "videos"
       ],
       "plugin": "upload",
-      "required": false
+      "required": false,
+      "pluginOptions": {}
     },
     "url": {
       "type": "string"
+    },
+    "links": {
+      "type": "component",
+      "repeatable": true,
+      "component": "project.project-link"
     }
   }
 }

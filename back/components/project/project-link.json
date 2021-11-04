@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_project_project_links",
+  "info": {
+    "name": "project-link",
+    "icon": "code-branch"
+  },
+  "options": {},
+  "attributes": {
+    "label": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string"
+    },
+    "icon": {
+      "type": "string"
+    }
+  }
+}
