@@ -29,9 +29,6 @@
       "required": false,
       "pluginOptions": {}
     },
-    "url": {
-      "type": "string"
-    },
     "links": {
       "type": "component",
       "repeatable": true,
