@@ -1,7 +1,6 @@
-import { ReactElement } from 'react'
+import { CSSProperties, ReactElement } from 'react'
 
 import { Box, Grow, Link, Paper, Typography } from '@material-ui/core'
-import { CSSProperties } from '@material-ui/core/styles/withStyles'
 
 import { Icon } from '../../icons/Icon'
 import { useGlobalStyles } from '../../style/global'

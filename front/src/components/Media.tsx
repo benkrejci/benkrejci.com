@@ -1,5 +1,5 @@
 import MaterialImage from 'material-ui-image'
-import React, { ReactElement } from 'react'
+import React, { CSSProperties, ReactElement } from 'react'
 
 import { Grid, useTheme } from '@material-ui/core'
 
@@ -24,7 +24,7 @@ export const Media = ({
   maxHeight?: string | number
   align?: 'center' | 'left' | 'right'
   className?: string
-  style?: React.CSSProperties
+  style?: CSSProperties
 }): ReactElement => {
   const theme = useTheme()
 
@@ -56,7 +56,9 @@ export const Media = ({
   return (
     <Grid
       container
-      justifyContent={align === 'left' ? 'flex-start' : align === 'right' ? 'flex-end' : 'center'}
+      justifyContent={
+        align === 'left' ? 'flex-start' : align === 'right' ? 'flex-end' : 'center'
+      }
       className={className}
       style={{ backgroundColor: theme.palette.background.paper, ...style }}
     >

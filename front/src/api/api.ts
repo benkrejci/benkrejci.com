@@ -240,6 +240,8 @@ export interface ProjectLink {
   icon: string
 }
 
+export const getProjectUri = (project: Project) => `/portfolio/${toSlug(project.name)}`
+
 export const getProjects = async (params?: any): Promise<Response<Project[]>> =>
   get('projects', { ...params })
 

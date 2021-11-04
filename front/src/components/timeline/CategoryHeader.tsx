@@ -1,23 +1,21 @@
-import { forwardRef, ReactElement, useRef } from 'react'
+import { CSSProperties, forwardRef, ReactElement, useRef } from 'react'
 import { useForkRef } from 'rooks'
 
 import { Typography } from '@material-ui/core'
-import { CSSProperties } from '@material-ui/core/styles/withStyles'
 
 import { isInView } from '../../utility/isInView'
 import { useRect } from '../../utility/useRect'
 import { useTimelineStyles } from './styles'
 import { TimelineCategory } from './types'
 
-export const CategoryHeader = forwardRef<HTMLElement, {
-  category: TimelineCategory
-  stickyHeaderEnabled?: boolean
-  style?: CSSProperties
-}>(({
-  category,
-  stickyHeaderEnabled,
-  style,
-}, outerRef): ReactElement => {
+export const CategoryHeader = forwardRef<
+  HTMLElement,
+  {
+    category: TimelineCategory
+    stickyHeaderEnabled?: boolean
+    style?: CSSProperties
+  }
+>(({ category, stickyHeaderEnabled, style }, outerRef): ReactElement => {
   const styles = useTimelineStyles()
 
   const [categoryInView, inViewRef] = isInView({ threshold: 1 })

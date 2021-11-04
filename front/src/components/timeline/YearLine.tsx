@@ -1,7 +1,6 @@
-import { ReactElement } from 'react'
+import { CSSProperties, ReactElement } from 'react'
 
 import { Zoom } from '@material-ui/core'
-import { CSSProperties } from '@material-ui/core/styles/withStyles'
 
 import { ParallaxQueue } from '../../utility/ParallaxQueue'
 import { QueuedParallaxShow } from '../../utility/QueuedParallaxShow'
