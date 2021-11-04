@@ -2,7 +2,6 @@ import MaterialImage from 'material-ui-image'
 import React, { ReactElement } from 'react'
 
 import { Grid, useTheme } from '@material-ui/core'
-import { CSSProperties } from '@material-ui/core/styles/withStyles'
 
 import { EXTERNAL_API_SERVER, File, Image } from '../api/api'
 
@@ -25,7 +24,7 @@ export const Media = ({
   maxHeight?: string | number
   align?: 'center' | 'left' | 'right'
   className?: string
-  style?: CSSProperties
+  style?: React.CSSProperties
 }): ReactElement => {
   const theme = useTheme()
 
