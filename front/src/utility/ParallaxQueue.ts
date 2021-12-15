@@ -161,7 +161,7 @@ export class ParallaxQueue {
     this.elementBySetIsVisible.forEach((element) => this.observer.observe(element))
 
     const rootMarginParts = (observerProps?.rootMargin || '0px').split(' ').map((part) => {
-      if (part.match(/^-?\d+px$/)) return parseInt(part)
+      if (part.match(/^-?\d+(\.\d+)?px$/)) return parseInt(part)
       throw new TypeError(`Invalid rootMargin value for ParallaxQueue "${part}", only px allowed`)
     })
     if (rootMarginParts.length === 1) {
