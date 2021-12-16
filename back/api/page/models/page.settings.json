@@ -90,6 +90,9 @@
     },
     "description": {
       "type": "string"
+    },
+    "hideSocial": {
+      "type": "boolean"
     }
   }
 }
