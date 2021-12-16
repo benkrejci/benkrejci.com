@@ -11,6 +11,7 @@
     "build:back": "yarn workspace back build",
     "build:deployer": "yarn workspace deployer build",
     "build:front": "yarn workspace front build",
+    "reload": "yarn workspace front reload",
     "setup:dev": "./bin/setup.sh",
     "setup": "./bin/setup.sh && yarn workspace back setup && yarn workspace deployer setup && yarn workspace front setup",
     "dev": "yarn workspace front dev"
