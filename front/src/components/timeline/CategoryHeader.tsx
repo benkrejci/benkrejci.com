@@ -18,7 +18,9 @@ export const CategoryHeader = forwardRef<
 >(({ category, stickyHeaderEnabled, style }, outerRef): ReactElement => {
   const styles = useTimelineStyles()
 
-  const [categoryInView, inViewRef] = isInView({ threshold: 1 })
+  // Disregard horizontal occlusion by adding arbitrarily large horizontal margin
+  // (This actually does not work in Chrome at the time of writing due to a presumed bug)
+  const [categoryInView, inViewRef] = isInView({ threshold: 1, rootMargin: '0px 2000px' })
   const rectRef = useRef()
   const headerRect = useRect(rectRef)
   const tempRef = useForkRef(inViewRef, rectRef)
