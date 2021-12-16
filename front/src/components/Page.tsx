@@ -2,7 +2,7 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { ReactElement, ReactNode } from 'react'
 
-import { Grid, Hidden, Link, makeStyles } from '@material-ui/core'
+import { Grid, Hidden, HiddenProps, Link, makeStyles } from '@material-ui/core'
 import Box from '@material-ui/core/Box'
 import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography'
@@ -32,7 +32,8 @@ export function Page({
   children?: ReactNode
 }): ReactElement {
   const router = useRouter()
-  const matchingSlug = (router.pathname.charAt(0) === '/' && router.query.pageName) || 'home'
+  const matchingSlug =
+    (router.pathname.charAt(0) === '/' && router.query.pageName) || 'home'
   const currentPage = global.topNav.find((page) => matchingSlug === page.slug)
 
   title = title || currentPage?.title || ''
@@ -40,8 +41,9 @@ export function Page({
 
   const styles = useStyles()
 
-  const socialHiddenProps = {}
-  if (currentPage?.hideSocialDown) socialHiddenProps[currentPage.hideSocialDown + 'Down'] = true
+  const socialHiddenProps: HiddenProps = {}
+  if (currentPage?.hideSocialDown)
+    socialHiddenProps[currentPage.hideSocialDown + 'Down'] = true
   if (currentPage?.hideSocialUp) socialHiddenProps[currentPage.hideSocialUp + 'Up'] = true
 
   return (
@@ -67,13 +69,15 @@ export function Page({
               </Link>
             </Grid>
 
-            <Hidden implementation="css" {...socialHiddenProps}>
-              <Grid item>
-                <Box padding={2}>
-                  <Social socials={global.socials} />
-                </Box>
-              </Grid>
-            </Hidden>
+            {currentPage?.hideSocial ? null : (
+              <Hidden implementation="css" {...socialHiddenProps}>
+                <Grid item>
+                  <Box padding={2}>
+                    <Social socials={global.socials} size="responsive" />
+                  </Box>
+                </Grid>
+              </Hidden>
+            )}
 
             <Grid item>
               <Box>

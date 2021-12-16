@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react'
 
-import { Grid, Link, makeStyles, SvgIconProps, Typography } from '@material-ui/core'
+import { Grid, Link, makeStyles, SvgIconProps, Typography, useMediaQuery, useTheme } from '@material-ui/core'
 
 import { Social as SocialModel } from '../../api/api'
 import { Icon } from '../../icons/Icon'
@@ -17,13 +17,16 @@ const socialTitlesByType: { [type: string]: string } = {
 export function Social({
   socials,
   wide,
-  size = 'large',
+  size = 'responsive',
 }: {
   socials: SocialModel[]
   wide?: boolean
-  size?: 'inherit' | 'default' | 'small' | 'large'
+  size?: 'inherit' | 'default' | 'small' | 'large' | 'responsive'
 }): ReactElement {
-  const iconProps: SvgIconProps = { fontSize: size }
+  const theme = useTheme()
+  const mediaUpSmall = useMediaQuery(theme.breakpoints.up('sm'))
+  const iconSize = size === 'responsive' ? (mediaUpSmall ? 'large' : 'small') : size
+  const iconProps: SvgIconProps = { fontSize: iconSize }
   const styles = useStyles()
 
   return (

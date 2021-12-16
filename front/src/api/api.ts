@@ -61,6 +61,7 @@ export interface Page extends ContentType {
   title: string
   slug: string
   description?: string
+  hideSocial: boolean
   hideSocialDown: Breakpoint | null
   hideSocialUp: Breakpoint | null
   topWidgets: Widget[]
