@@ -8,11 +8,15 @@ import { useTimelineStyles, YEAR_LINE_ANIMATION_DURATION_MS } from './styles'
 
 export const YearLine = ({
   parallaxQueue,
+  enabled,
   fadeOut,
+  fadeIn,
   style,
 }: {
   parallaxQueue: ParallaxQueue
+  enabled?: boolean
   fadeOut?: boolean
+  fadeIn?: boolean
   style?: CSSProperties
   animationDurationMs?: number
 }): ReactElement => {
@@ -21,11 +25,16 @@ export const YearLine = ({
   return (
     <div className={styles.verticalLineCell} style={style} aria-hidden>
       <QueuedParallaxShow
+        enabled={enabled}
         transition={<Zoom timeout={YEAR_LINE_ANIMATION_DURATION_MS} />}
         className={styles.verticalLineContainer}
         queue={parallaxQueue}
       >
-        <div className={`${styles.verticalLine} ${fadeOut ? styles.fadeOutLine : ''}`} />
+        <div
+          className={`${styles.verticalLine} ${
+            fadeOut ? styles.fadeOutLine : fadeIn ? styles.fadeInLine : ''
+          }`}
+        />
       </QueuedParallaxShow>
     </div>
   )

@@ -13,8 +13,17 @@ export const useTimelineStyles = makeStyles((theme) => ({
     //columnGap: theme.spacing(1),
   },
 
-  topBufferCell: {
+  sortCell: {
+    gridRowStart: 1,
+    gridRowEnd: 'span 3',
     gridColumnStart: 1,
+    gridColumnEnd: 'span 1',
+    justifySelf: 'center',
+    alignSelf: 'center',
+  },
+
+  topBufferCell: {
+    gridColumnStart: 2,
     gridRowStart: 2,
     gridRowEnd: 3,
     minHeight: '20px',
@@ -45,6 +54,7 @@ export const useTimelineStyles = makeStyles((theme) => ({
 
   verticalLine: {
     height: '100%',
+    minHeight: '2px',
     width: '2px',
     backgroundColor: alpha(theme.palette.text.primary, 0.6),
   },
@@ -59,6 +69,14 @@ export const useTimelineStyles = makeStyles((theme) => ({
       theme.palette.text.primary,
       0.6,
     )} 0%, transparent 100%)`,
+  },
+
+  fadeInLine: {
+    minHeight: '20px',
+    background: `linear-gradient(180deg, transparent 0%, ${fade(
+      theme.palette.text.primary,
+      0.6,
+    )} 100%)`,
   },
 
   verticalLineCap: {

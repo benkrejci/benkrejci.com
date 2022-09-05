@@ -8,12 +8,14 @@ import { ParallaxQueue } from './ParallaxQueue'
 export const QueuedParallaxShow = <T extends TransitionProps>({
   children,
   queue,
+  enabled = true,
   transition = <Grow />,
   observerProps,
   ...props
 }: {
   children: ReactElement
   queue: ParallaxQueue
+  enabled?: boolean
   transition?: ReactElement
   transitionProps?: Omit<T, 'in' & 'children'>
   observerProps?: IntersectionObserverInit
@@ -27,7 +29,7 @@ export const QueuedParallaxShow = <T extends TransitionProps>({
 
   return (
     <div ref={ref} {...props}>
-      {cloneElement(transition, { in: animateIn, children })}
+      {cloneElement(transition, { in: enabled && animateIn, children })}
     </div>
   )
 }

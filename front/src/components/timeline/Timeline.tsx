@@ -1,9 +1,10 @@
-import { ReactElement, useRef } from 'react'
+import { ReactElement, useState, useRef } from 'react'
 
-import { alpha, Grow } from '@material-ui/core'
+import { fade, Grow, Link } from '@material-ui/core'
+import { ArrowDownward, ArrowUpward } from '@material-ui/icons'
 
 import { isInView } from '../../utility/isInView'
-import { useParallaxQueue } from '../../utility/ParallaxQueue'
+import { ParallaxQueue, useParallaxQueue } from '../../utility/ParallaxQueue'
 import { CategoryHeader } from './CategoryHeader'
 import { CategoryLine } from './CategoryLine'
 import { Event } from './Event'
@@ -14,6 +15,56 @@ import { YearLine } from './YearLine'
 import { useBoundingclientrect } from 'rooks'
 import { useRect } from '../../utility/useRect'
 
+interface CellDefinition {
+  type: 'yearLine' | 'yearLabel' | 'event'
+  event?: TimelineEvent
+  year?: number
+  rowStart: number
+  rowEnd: number
+  columnStart?: number
+}
+
+function renderCell(
+  cell: CellDefinition,
+  yearParallaxQueue: ParallaxQueue,
+  eventParallaxQueue: ParallaxQueue,
+) {
+  switch (cell.type) {
+    case 'yearLine':
+      return (
+        <YearLine
+          style={{ gridRowStart: cell.rowStart, gridRowEnd: cell.rowEnd }}
+          parallaxQueue={yearParallaxQueue}
+          key={`yearLine-${cell.year}`}
+        />
+      )
+
+    case 'yearLabel':
+      return (
+        <YearLabel
+          year={cell.year}
+          style={{ gridRowStart: cell.rowStart }}
+          parallaxQueue={yearParallaxQueue}
+          key={`yearLabel-${cell.year}`}
+        />
+      )
+
+    case 'event':
+      return (
+        <Event
+          event={cell.event}
+          style={{
+            gridRowStart: cell.rowStart,
+            gridRowEnd: cell.rowEnd,
+            gridColumnStart: cell.columnStart,
+          }}
+          parallaxQueue={eventParallaxQueue}
+          key={`event-${cell.rowStart}`}
+        />
+      )
+  }
+}
+
 export const Timeline = ({
   categories,
   events,
@@ -21,6 +72,8 @@ export const Timeline = ({
   categories: TimelineCategory[]
   events: TimelineEvent[]
 }): ReactElement => {
+  const [sortIsDesc, setSortIsDesc] = useState(true)
+  const [sortIsFlipping, setSortIsFlipping] = useState(false)
   const styles = useTimelineStyles()
   const yearParallaxQueue = useParallaxQueue()
   const headerRef = useRef()
@@ -36,14 +89,33 @@ export const Timeline = ({
 
   const cells: ReactElement[] = []
 
-  let lastRow: number | null = null
-  let lastYear: number | null = null
-  let rowIndex = 2
+  // sort button
+  cells.push(
+    <Link className={styles.sortCell} onClick={() => setSortIsFlipping(!sortIsDesc)}>
+      {sortIsDesc ? <ArrowDownward /> : <ArrowUpward />}
+    </Link>,
+  )
+
+  // future year line
+  cells.push(
+    <YearLine
+      fadeIn
+      enabled={!sortIsDesc}
+      parallaxQueue={yearParallaxQueue}
+      style={{ gridRowStart: 3, gridRowEnd: 4 }}
+      key="yearLine-asc-future"
+    />,
+  )
 
   // space between category headers and events
   cells.push(<div className={styles.topBufferCell} key="topBuffer" />)
-  rowIndex++
 
+  const startRow = 3
+  let rowIndex = startRow
+
+  const eventCells: Array<CellDefinition> = []
+  let lastRow: number | null = null
+  let lastYear: number | null = null
   for (let eventIndex = 0; eventIndex <= events.length; eventIndex++) {
     const event = events[eventIndex]
     const rowStartIndex = rowIndex
@@ -52,43 +124,36 @@ export const Timeline = ({
     if (lastYear !== currentYear) {
       if (lastRow !== null) {
         // year line
-        cells.push(
-          <YearLine
-            style={{ gridRowStart: lastRow + 1, gridRowEnd: rowIndex++ + 1 }}
-            parallaxQueue={yearParallaxQueue}
-            key={`yearLine-${currentYear}`}
-          />,
-        )
+        eventCells.push({
+          type: 'yearLine',
+          year: currentYear,
+          rowStart: lastRow + 1,
+          rowEnd: rowIndex + 1,
+        })
       }
+      rowIndex++
 
       lastRow = rowIndex
       lastYear = currentYear
       // year label
-      cells.push(
-        <YearLabel
-          year={currentYear}
-          style={{ gridRowStart: rowIndex++ }}
-          parallaxQueue={yearParallaxQueue}
-          key={`yearLabel-${rowIndex}`}
-        />,
-      )
+      eventCells.push({
+        type: 'yearLabel',
+        year: currentYear,
+        rowStart: rowIndex++,
+        rowEnd: rowIndex,
+      })
     }
 
     // event
     if (event) {
       const categoryIndex = categories.indexOf(event.category)
-      cells.push(
-        <Event
-          event={event}
-          style={{
-            gridRowStart: rowStartIndex,
-            gridRowEnd: rowIndex++,
-            gridColumnStart: 2 + categoryIndex,
-          }}
-          parallaxQueue={eventParallaxQueue}
-          key={`event-${rowIndex}`}
-        />,
-      )
+      eventCells.push({
+        type: 'event',
+        event,
+        rowStart: rowStartIndex,
+        rowEnd: rowIndex++,
+        columnStart: 2 + categoryIndex,
+      })
     }
   }
 
@@ -96,11 +161,27 @@ export const Timeline = ({
   cells.push(
     <YearLine
       fadeOut
+      enabled={sortIsDesc}
       parallaxQueue={yearParallaxQueue}
       style={{ gridRowStart: lastRow + 1, gridRowEnd: rowIndex++ + 1 }}
-      key="yearLine-future"
+      key="yearLine-desc-future"
     />,
   )
+
+  // render cells
+  if (sortIsDesc) {
+    eventCells.forEach((cell) =>
+      cells.push(renderCell(cell, yearParallaxQueue, eventParallaxQueue)),
+    )
+  } else {
+    for (let cellIndex = eventCells.length - 1; cellIndex >= 0; cellIndex--) {
+      const cellDefinition = eventCells[cellIndex]
+      const rowStart = rowIndex - cellDefinition.rowEnd + startRow
+      cellDefinition.rowEnd = rowIndex - cellDefinition.rowStart + startRow
+      cellDefinition.rowStart = rowStart
+      cells.push(renderCell(cellDefinition, yearParallaxQueue, eventParallaxQueue))
+    }
+  }
 
   const stickyHeaders: ReactElement[] = []
   const [timelineInView, timelineRef] = isInView({ threshold: 0 })
@@ -131,7 +212,7 @@ export const Timeline = ({
         key={`categoryLine-${category.name}`}
       >
         <CategoryLine
-          color={alpha(category.color, 0.5)}
+          color={fade(category.color, 0.5)}
           style={{
             gridColumnStart,
             gridRowStart: 2,

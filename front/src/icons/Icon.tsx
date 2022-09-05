@@ -1,15 +1,16 @@
 import { ReactElement } from 'react'
 
-import { SvgIcon, SvgIconProps } from '@material-ui/core'
+import { SvgIconProps } from '@material-ui/core'
 import {
-  Cake, Code, EmojiEmotions, Favorite, Flare, FlashOn, GitHub, Hearing, Instagram, Language,
+  Build, Cake, Code, EmojiEmotions, Favorite, Flare, FlashOn, GitHub, Hearing, Instagram, Language,
   LinkedIn, LocalShipping, MusicNote, Pets, School, Star, Twitter, Work
 } from '@material-ui/icons'
 
 import Drum from './Drum'
 import Soundcloud from './Soundcloud'
 
-const iconComponentByName: { [type: string]: typeof SvgIcon } = {
+const iconComponentByName = {
+  build: Build,
   linkedin: LinkedIn,
   twitter: Twitter,
   soundcloud: Soundcloud,
@@ -30,9 +31,11 @@ const iconComponentByName: { [type: string]: typeof SvgIcon } = {
   drum: Drum,
   pets: Pets,
   heart: Favorite,
-}
+} as const
 
-export const Icon = ({ name, ...props }: { name: string } & SvgIconProps): ReactElement => {
+export type IconName = keyof typeof iconComponentByName
+
+export const Icon = ({ name, ...props }: { name: IconName } & SvgIconProps): ReactElement => {
   if (!(name in iconComponentByName)) {
     console?.warn && console.warn(`Unknown icon: ${name}`)
     return null

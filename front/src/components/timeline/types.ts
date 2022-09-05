@@ -1,3 +1,5 @@
+import { IconName } from "../../icons/Icon"
+
 export interface TimelineCategory {
   name: string
   color: string
@@ -10,5 +12,5 @@ export interface TimelineEvent {
   url: string
   description: string
   category: TimelineCategory
-  icon: string
+  icon: IconName
 }

@@ -7,11 +7,13 @@ import { isInView } from './isInView'
 
 export const ParallaxShow = <T extends TransitionProps>({
   children,
+  enabled = true,
   transition = <Grow />,
   observerProps,
   ...props
 }: {
   children: ReactElement
+  enabled?: boolean
   transition?: ReactElement
   transitionProps?: Omit<T, 'in' & 'children'>
   observerProps?: IntersectionObserverInit
@@ -27,7 +29,7 @@ export const ParallaxShow = <T extends TransitionProps>({
 
   return (
     <div ref={ref} {...props}>
-      {cloneElement(transition, { in: animateIn, children })}
+      {cloneElement(transition, { in: enabled && animateIn, children })}
     </div>
   )
 }
