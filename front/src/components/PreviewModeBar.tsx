@@ -1,4 +1,4 @@
-import { fade, Box, Button, makeStyles } from '@material-ui/core'
+import { alpha, Box, Button, makeStyles } from '@material-ui/core'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { ExternalLink } from '../utility/ExternalLink'
@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: fade(theme.palette.primary.main, 0.2),
+    backgroundColor: alpha(theme.palette.primary.main, 0.2),
   },
 
   button: {

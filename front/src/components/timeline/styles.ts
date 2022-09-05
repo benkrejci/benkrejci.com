@@ -1,4 +1,4 @@
-import { fade, makeStyles } from '@material-ui/core'
+import { alpha, makeStyles } from '@material-ui/core'
 
 export const YEAR_LABEL_ANIMATION_DURATION_MS = 600
 export const YEAR_LINE_ANIMATION_DURATION_MS = 1400
@@ -56,7 +56,7 @@ export const useTimelineStyles = makeStyles((theme) => ({
     height: '100%',
     minHeight: '2px',
     width: '2px',
-    backgroundColor: fade(theme.palette.text.primary, 0.6),
+    backgroundColor: alpha(theme.palette.text.primary, 0.6),
   },
 
   categoryLineCell: {
@@ -65,7 +65,7 @@ export const useTimelineStyles = makeStyles((theme) => ({
 
   fadeOutLine: {
     minHeight: '20px',
-    background: `linear-gradient(180deg, ${fade(
+    background: `linear-gradient(180deg, ${alpha(
       theme.palette.text.primary,
       0.6,
     )} 0%, transparent 100%)`,
@@ -98,8 +98,8 @@ export const useTimelineStyles = makeStyles((theme) => ({
       display: 'inline-block',
       marginTop: -theme.spacing(1),
       paddingTop: theme.spacing(1),
-      backgroundColor: fade(theme.palette.background.default, 0.85),
-      boxShadow: `0 0 18px 18px ${fade(theme.palette.background.default, 0.85)}`,
+      backgroundColor: alpha(theme.palette.background.default, 0.85),
+      boxShadow: `0 0 18px 18px ${alpha(theme.palette.background.default, 0.85)}`,
     },
   },
 
@@ -125,6 +125,6 @@ export const useTimelineStyles = makeStyles((theme) => ({
     left: '-30px',
     top: '50%',
     marginTop: '-12px',
-    color: fade(theme.palette.text.primary, 0.7),
+    color: alpha(theme.palette.text.primary, 0.7),
   },
 }))

@@ -1,4 +1,4 @@
-import { createMuiTheme, fade, responsiveFontSizes } from '@material-ui/core'
+import { createTheme, alpha, responsiveFontSizes } from '@material-ui/core'
 
 declare module '@material-ui/core/styles/createPalette' {
   interface Palette {
@@ -12,7 +12,7 @@ declare module '@material-ui/core/styles/createPalette' {
   }
 }
 
-declare module '@material-ui/core/styles/createMuiTheme' {
+declare module '@material-ui/core/styles/createTheme' {
   interface TypeGradient {
     groovy: string
     subdued: string
@@ -37,7 +37,7 @@ const BACKGROUND_LIGHT = 'rgba(32, 21, 42, 1)'
 const BACKGROUND_PAPER = 'rgba(28, 31, 49, 0.76)'
 
 export const theme = responsiveFontSizes(
-  createMuiTheme({
+  createTheme({
     typography: {
       h1: {
         fontSize: '4rem',
@@ -80,7 +80,7 @@ export const theme = responsiveFontSizes(
     gradient: {
       groovy: `linear-gradient(50deg, ${PRIMARY} 0%, ${SECONDARY} 100%)`,
       subdued: `linear-gradient(130deg, ${SECONDARY} 0%, ${PRIMARY} 100%)`,
-      darkRadial: `radial-gradient(${fade(BACKGROUND_DARK, 0.85)} 50%, transparent 100%)`,
+      darkRadial: `radial-gradient(${alpha(BACKGROUND_DARK, 0.85)} 50%, transparent 100%)`,
     },
 
     overrides: {
