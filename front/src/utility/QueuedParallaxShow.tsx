@@ -1,4 +1,4 @@
-import React, { cloneElement, HTMLProps, ReactElement, useCallback, useState } from 'react'
+import React, { cloneElement, HTMLProps, ReactElement, useCallback, useEffect, useState } from 'react'
 
 import { Grow } from '@material-ui/core'
 import { TransitionProps } from '@material-ui/core/transitions'
@@ -10,7 +10,6 @@ export const QueuedParallaxShow = <T extends TransitionProps>({
   queue,
   enabled = true,
   transition = <Grow />,
-  observerProps,
   ...props
 }: {
   children: ReactElement
@@ -18,13 +17,15 @@ export const QueuedParallaxShow = <T extends TransitionProps>({
   enabled?: boolean
   transition?: ReactElement
   transitionProps?: Omit<T, 'in' & 'children'>
-  observerProps?: IntersectionObserverInit
 } & HTMLProps<HTMLDivElement>): ReactElement => {
   const [animateIn, setAnimateIn] = useState(false)
 
   const ref = useCallback((node: HTMLElement) => {
-    if (node) queue.add(setAnimateIn, node)
-    else queue.remove(setAnimateIn)
+    if (node) {
+      queue.add(setAnimateIn, node)
+    } else {
+      queue.remove(setAnimateIn)
+    }
   }, [])
 
   return (

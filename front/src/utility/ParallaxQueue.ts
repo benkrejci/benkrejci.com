@@ -1,7 +1,8 @@
 import { useRef } from 'react'
 import { isEqual } from 'lodash'
 
-const DEFAULT_DELAY_MS = 200
+const DEFAULT_MIN_DELAY_MS = 20
+const DEFAULT_TARGET_DELAY_MS = 200
 
 export const useParallaxQueue = ({
   targetDelayMs,
@@ -25,6 +26,11 @@ export const useParallaxQueue = ({
 }
 
 type SetIsVisibleFunc = (boolean) => void
+interface Item {
+  element: Element
+  isVisible: boolean
+  setIsVisible: SetIsVisibleFunc
+}
 interface ToViewportEdges {
   toTop: number
   toLeft: number
@@ -88,12 +94,15 @@ interface ViewportEdges {
  *        +-------######----+
  */
 export class ParallaxQueue {
+  private easingEnabled: boolean
+  private minDelayMs: number
   private targetDelayMs: number
-  private readonly showQueue: SetIsVisibleFunc[] = []
+  private readonly queue: ((() => void) | Item)[] = []
   private nextTimeout: NodeJS.Timeout | null = null
   private observer: IntersectionObserver
-  private elementBySetIsVisible: Map<SetIsVisibleFunc, Element> = new Map()
-  private setIsVisibleByElement: Map<Element, SetIsVisibleFunc> = new Map()
+  private observerProps: IntersectionObserverInit
+  private readonly itemsByVisibilitySetter: Map<SetIsVisibleFunc, Item> = new Map()
+  private readonly itemsByElement: Map<Element, Item> = new Map()
   private lastViewportEdges: ViewportEdges
   private paused: boolean
   private rootMargin: { top: number; right: number; bottom: number; left: number }
@@ -104,15 +113,21 @@ export class ParallaxQueue {
    * @param observerProps
    */
   constructor({
-    targetDelayMs = DEFAULT_DELAY_MS,
+    easingEnabled = true,
+    minDelayMs = DEFAULT_MIN_DELAY_MS,
+    targetDelayMs = DEFAULT_TARGET_DELAY_MS,
     observerProps,
     autoStart = true,
   }: {
+    easingEnabled?: boolean
+    minDelayMs?: number
     targetDelayMs?: number
     observerProps?: IntersectionObserverInit
     autoStart?: boolean
   } = {}) {
-    this.targetDelayMs = targetDelayMs
+    this.setEasingEnabled(easingEnabled)
+    this.setMinDelay(minDelayMs)
+    this.setTargetDelay(targetDelayMs)
 
     this.initObserver(observerProps)
 
@@ -129,41 +144,65 @@ export class ParallaxQueue {
   }
 
   public add(setIsVisible: SetIsVisibleFunc, element: Element): void {
-    this.elementBySetIsVisible.set(setIsVisible, element)
-    this.setIsVisibleByElement.set(element, setIsVisible)
+    const item = { element, isVisible: false, setIsVisible }
+    this.itemsByVisibilitySetter.set(setIsVisible, item)
+    this.itemsByElement.set(element, item)
     this.observer.observe(element)
   }
 
   public remove(setIsVisible: SetIsVisibleFunc): void {
-    const element = this.elementBySetIsVisible.get(setIsVisible)
-    if (element) {
-      this.elementBySetIsVisible.delete(setIsVisible)
-      this.setIsVisibleByElement.delete(element)
-      this.observer.unobserve(element)
+    const item = this.itemsByVisibilitySetter.get(setIsVisible)
+    if (item) {
+      this.itemsByVisibilitySetter.delete(setIsVisible)
+      this.itemsByElement.delete(item.element)
+      this.observer.unobserve(item.element)
     }
+  }
+
+  public forceHideAll(callback?: () => void): void {
+    Array.from(this.itemsByElement.entries())
+      .filter(([_element, { isVisible }]) => isVisible)
+      .sort(([elA], [elB]) => this.getRtlOrderIndex(elA) - this.getRtlOrderIndex(elB))
+      .forEach(([_node, item]) =>
+        this.queue.push(() => this.setItemVisibility(item, false)),
+      )
+    callback && this.queue.push(callback)
+    this.next()
+  }
+
+  public setEasingEnabled(enabled: boolean) {
+    this.easingEnabled = enabled
+  }
+
+  public setMinDelay(delayMs: number) {
+    this.minDelayMs = delayMs
   }
 
   public setTargetDelay(delayMs: number) {
     this.targetDelayMs = delayMs
   }
 
-  public reInitObserver(observerProps: IntersectionObserverInit) {
+  public reInitObserver(observerProps?: IntersectionObserverInit) {
     this.observer.disconnect()
-    this.initObserver(observerProps)
+    this.initObserver(observerProps ?? this.observerProps)
+  }
+
+  private setItemVisibility(item: Item, isVisible: boolean) {
+    item.setIsVisible(isVisible)
+    item.isVisible = isVisible
   }
 
   private initObserver(observerProps: IntersectionObserverInit): void {
-    this.observer =
-      typeof window !== 'undefined' &&
-      new IntersectionObserver((entries) => this.intersect(entries), observerProps)
-    
-    // if there are already elements to observe (in case of re-init), observe again
-    this.elementBySetIsVisible.forEach((element) => this.observer.observe(element))
+    this.observerProps = observerProps
 
-    const rootMarginParts = (observerProps?.rootMargin || '0px').split(' ').map((part) => {
-      if (part.match(/^-?\d+(\.\d+)?px$/)) return parseInt(part)
-      throw new TypeError(`Invalid rootMargin value for ParallaxQueue "${part}", only px allowed`)
-    })
+    const rootMarginParts = (observerProps?.rootMargin || '0px')
+      .split(' ')
+      .map((part) => {
+        if (part.match(/^-?\d+(\.\d+)?px$/)) return parseInt(part)
+        throw new TypeError(
+          `Invalid rootMargin value for ParallaxQueue "${part}", only px allowed`,
+        )
+      })
     if (rootMarginParts.length === 1) {
       this.rootMargin = {
         top: rootMarginParts[0],
@@ -186,31 +225,38 @@ export class ParallaxQueue {
         left: rootMarginParts[3] || 0,
       }
     }
+
+    this.observer =
+      typeof window !== 'undefined' &&
+      new IntersectionObserver((entries) => this.intersect(entries), observerProps)
+
+    // if there are already elements to observe (in case of re-init), observe again
+    Array.from(this.itemsByElement)
+      .sort(([elA], [elB]) => this.getRtlOrderIndex(elA) - this.getRtlOrderIndex(elB))
+      .forEach(([element]) => this.observer.observe(element))
   }
 
   private intersect(entries: IntersectionObserverEntry[]): void {
     const lastViewportEdges = this.lastViewportEdges
     const viewportEdges = this.getViewportEdges()
-    const members: Array<{
-      setIsVisible: SetIsVisibleFunc
+    const members: {
       index: number
-    }> = []
+      item: Item
+    }[] = []
     entries.forEach((entry) => {
-      const setIsVisible = this.setIsVisibleByElement.get(entry.target)
+      const item = this.itemsByElement.get(entry.target)
       if (!entry.isIntersecting) {
-        setIsVisible(false)
+        this.setItemVisibility(item, false)
       } else {
         const edges = this.getEdges(entry)
         const index = this.getIntersectIndex(lastViewportEdges, viewportEdges, edges)
-        members.push({ setIsVisible, index })
+        members.push({ index, item })
       }
     })
     members
       .sort((a, b) => a.index - b.index)
-      .forEach(({ setIsVisible }) => {
-        this.showQueue.push(setIsVisible)
-        this.next()
-      })
+      .forEach(({ item }) => this.queue.push(item))
+    this.next()
     this.lastViewportEdges = viewportEdges
   }
 
@@ -218,8 +264,12 @@ export class ParallaxQueue {
     return {
       top: window.pageYOffset - this.rootMargin.top,
       left: window.pageXOffset - this.rootMargin.left,
-      bottom: window.pageYOffset - this.rootMargin.bottom + document.documentElement.clientHeight,
-      right: window.pageXOffset - this.rootMargin.right + document.documentElement.clientWidth,
+      bottom:
+        window.pageYOffset -
+        this.rootMargin.bottom +
+        document.documentElement.clientHeight,
+      right:
+        window.pageXOffset - this.rootMargin.right + document.documentElement.clientWidth,
     }
   }
 
@@ -244,13 +294,26 @@ export class ParallaxQueue {
       maxToEdge = edges.toLeft
     if (viewportEdges.bottom > lastViewportEdges.bottom && edges.toBottom > maxToEdge)
       maxToEdge = edges.toBottom
-    if (viewportEdges.right > lastViewportEdges.right && edges.toRight) maxToEdge = edges.toRight
+    if (viewportEdges.right > lastViewportEdges.right && edges.toRight)
+      maxToEdge = edges.toRight
     return -maxToEdge
   }
 
+  private ARBITRARILY_LARGE_COORDINATE = 100_000
+
+  private getRtlOrderIndex = (node: Element) =>
+    // Use arbitrarily large multiplier to give vertical coordinate priority
+    this.ARBITRARILY_LARGE_COORDINATE * node.getBoundingClientRect().y +
+    Math.min(this.ARBITRARILY_LARGE_COORDINATE, node.getBoundingClientRect().x)
+
   private next(): void {
-    if (this.paused || !this.showQueue.length || this.nextTimeout !== null) return
-    this.showQueue.shift()(true)
+    if (this.paused || !this.queue.length || this.nextTimeout !== null) return
+    const queued = this.queue.shift()
+    if (queued instanceof Function) {
+      queued()
+    } else {
+      this.setItemVisibility(queued, true)
+    }
     this.nextTimeout = setTimeout(() => {
       this.nextTimeout = null
       this.next()
@@ -264,6 +327,8 @@ export class ParallaxQueue {
    * @see https://www.desmos.com/calculator/gbvhcqhm3b
    */
   private getDelay(): number {
-    return this.targetDelayMs * Math.pow(0.8, this.showQueue.length)
-  }
+    return this.easingEnabled
+      ? Math.max(this.minDelayMs, this.targetDelayMs * Math.pow(0.8, this.queue.length))
+      : this.minDelayMs
+    }
 }

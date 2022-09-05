@@ -1,6 +1,6 @@
-import { ReactElement, useState, useRef } from 'react'
+import { ReactElement, useState, useRef, useEffect } from 'react'
 
-import { fade, Grow, Link } from '@material-ui/core'
+import { alpha, Grow, Link } from '@material-ui/core'
 import { ArrowDownward, ArrowUpward } from '@material-ui/icons'
 
 import { isInView } from '../../utility/isInView'
@@ -12,7 +12,6 @@ import { CATEGORY_LINE_ANIMATION_DURATION_MS, useTimelineStyles } from './styles
 import { TimelineCategory, TimelineEvent } from './types'
 import { YearLabel } from './YearLabel'
 import { YearLine } from './YearLine'
-import { useBoundingclientrect } from 'rooks'
 import { useRect } from '../../utility/useRect'
 
 interface CellDefinition {
@@ -26,6 +25,7 @@ interface CellDefinition {
 
 function renderCell(
   cell: CellDefinition,
+  isFlipping: boolean,
   yearParallaxQueue: ParallaxQueue,
   eventParallaxQueue: ParallaxQueue,
 ) {
@@ -87,11 +87,30 @@ export const Timeline = ({
     },
   })
 
+  useEffect(() => {
+    if (sortIsFlipping) {
+      (async () => {
+        yearParallaxQueue.setEasingEnabled(false)
+        eventParallaxQueue.setEasingEnabled(false)
+        await Promise.all([
+          new Promise<void>((resolve) => yearParallaxQueue.forceHideAll(resolve)),
+          new Promise<void>((resolve) => eventParallaxQueue.forceHideAll(resolve)),
+        ])
+        yearParallaxQueue.setEasingEnabled(true)
+        eventParallaxQueue.setEasingEnabled(true)
+        setSortIsFlipping(false)
+        setSortIsDesc(!sortIsDesc)
+        yearParallaxQueue.reInitObserver()
+        eventParallaxQueue.reInitObserver()
+      })()
+    }
+  }, [sortIsFlipping, sortIsDesc])
+
   const cells: ReactElement[] = []
 
   // sort button
   cells.push(
-    <Link className={styles.sortCell} onClick={() => setSortIsFlipping(!sortIsDesc)}>
+    <Link className={styles.sortCell} onClick={() => setSortIsFlipping(true)} key="sort">
       {sortIsDesc ? <ArrowDownward /> : <ArrowUpward />}
     </Link>,
   )
@@ -112,50 +131,53 @@ export const Timeline = ({
 
   const startRow = 3
   let rowIndex = startRow
-
-  const eventCells: Array<CellDefinition> = []
   let lastRow: number | null = null
-  let lastYear: number | null = null
-  for (let eventIndex = 0; eventIndex <= events.length; eventIndex++) {
-    const event = events[eventIndex]
-    const rowStartIndex = rowIndex
 
-    const currentYear = event ? event.start.getFullYear() : new Date().getFullYear()
-    if (lastYear !== currentYear) {
-      if (lastRow !== null) {
-        // year line
+  const eventCells: Array<CellDefinition> = (() => {
+    const eventCells = []
+    let lastYear: number | null = null
+    for (let eventIndex = 0; eventIndex <= events.length; eventIndex++) {
+      const event = events[eventIndex]
+      const rowStartIndex = rowIndex
+
+      const currentYear = event ? event.start.getFullYear() : new Date().getFullYear()
+      if (lastYear !== currentYear) {
+        if (lastRow !== null) {
+          // year line
+          eventCells.push({
+            type: 'yearLine',
+            year: currentYear,
+            rowStart: lastRow + 1,
+            rowEnd: rowIndex + 1,
+          })
+        }
+        rowIndex++
+
+        lastRow = rowIndex
+        lastYear = currentYear
+        // year label
         eventCells.push({
-          type: 'yearLine',
+          type: 'yearLabel',
           year: currentYear,
-          rowStart: lastRow + 1,
-          rowEnd: rowIndex + 1,
+          rowStart: rowIndex++,
+          rowEnd: rowIndex,
         })
       }
-      rowIndex++
 
-      lastRow = rowIndex
-      lastYear = currentYear
-      // year label
-      eventCells.push({
-        type: 'yearLabel',
-        year: currentYear,
-        rowStart: rowIndex++,
-        rowEnd: rowIndex,
-      })
+      // event
+      if (event) {
+        const categoryIndex = categories.indexOf(event.category)
+        eventCells.push({
+          type: 'event',
+          event,
+          rowStart: rowStartIndex,
+          rowEnd: rowIndex++,
+          columnStart: 2 + categoryIndex,
+        })
+      }
     }
-
-    // event
-    if (event) {
-      const categoryIndex = categories.indexOf(event.category)
-      eventCells.push({
-        type: 'event',
-        event,
-        rowStart: rowStartIndex,
-        rowEnd: rowIndex++,
-        columnStart: 2 + categoryIndex,
-      })
-    }
-  }
+    return eventCells
+  })()
 
   // future year line
   cells.push(
@@ -171,7 +193,7 @@ export const Timeline = ({
   // render cells
   if (sortIsDesc) {
     eventCells.forEach((cell) =>
-      cells.push(renderCell(cell, yearParallaxQueue, eventParallaxQueue)),
+      cells.push(renderCell(cell, !sortIsFlipping, yearParallaxQueue, eventParallaxQueue)),
     )
   } else {
     for (let cellIndex = eventCells.length - 1; cellIndex >= 0; cellIndex--) {
@@ -179,7 +201,7 @@ export const Timeline = ({
       const rowStart = rowIndex - cellDefinition.rowEnd + startRow
       cellDefinition.rowEnd = rowIndex - cellDefinition.rowStart + startRow
       cellDefinition.rowStart = rowStart
-      cells.push(renderCell(cellDefinition, yearParallaxQueue, eventParallaxQueue))
+      cells.push(renderCell(cellDefinition, !sortIsFlipping, yearParallaxQueue, eventParallaxQueue))
     }
   }
 
@@ -212,7 +234,7 @@ export const Timeline = ({
         key={`categoryLine-${category.name}`}
       >
         <CategoryLine
-          color={fade(category.color, 0.5)}
+          color={alpha(category.color, 0.5)}
           style={{
             gridColumnStart,
             gridRowStart: 2,

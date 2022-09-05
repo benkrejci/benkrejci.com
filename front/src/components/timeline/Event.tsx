@@ -13,10 +13,12 @@ import { EVENT_ANIMATION_DURATION_MS, EVENT_INTERSECTION_MARGIN, useTimelineStyl
 import { TimelineEvent } from './types'
 
 export const Event = ({
+  enabled,
   event,
   parallaxQueue,
   style,
 }: {
+  enabled?: boolean
   event: TimelineEvent
   parallaxQueue: ParallaxQueue
   style?: CSSProperties
@@ -35,9 +37,9 @@ export const Event = ({
         }
       >
         <QueuedParallaxShow
+          enabled={enabled}
           queue={parallaxQueue}
           transition={<Grow timeout={EVENT_ANIMATION_DURATION_MS} />}
-          observerProps={{ rootMargin: EVENT_INTERSECTION_MARGIN }}
         >
           <Paper elevation={2}>
             <Icon name={event.icon} className={styles.eventIcon} />
