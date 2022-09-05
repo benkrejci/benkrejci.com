@@ -73,7 +73,7 @@ export const useTimelineStyles = makeStyles((theme) => ({
 
   fadeInLine: {
     minHeight: '20px',
-    background: `linear-gradient(180deg, transparent 0%, ${fade(
+    background: `linear-gradient(180deg, transparent 0%, ${alpha(
       theme.palette.text.primary,
       0.6,
     )} 100%)`,

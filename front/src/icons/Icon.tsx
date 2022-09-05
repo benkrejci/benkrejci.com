@@ -35,7 +35,7 @@ const iconComponentByName = {
 
 export type IconName = keyof typeof iconComponentByName
 
-export const Icon = ({ name, ...props }: { name: IconName } & SvgIconProps): ReactElement => {
+export const Icon = ({ name, ...props }: { name: IconName | string } & SvgIconProps): ReactElement => {
   if (!(name in iconComponentByName)) {
     console?.warn && console.warn(`Unknown icon: ${name}`)
     return null

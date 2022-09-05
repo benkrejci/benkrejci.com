@@ -1,6 +1,7 @@
 import axios from 'axios'
 
 import { Breakpoint } from '@material-ui/core/styles/createBreakpoints'
+import { IconName } from '../icons/Icon'
 
 export interface Response<T> {
   data?: T
@@ -46,7 +47,7 @@ export interface Global {
 }
 
 export interface Social {
-  type: string
+  type: IconName
   url: string
 }
 
@@ -127,7 +128,7 @@ export interface TimelineWidget {
 export interface TimelineEvent {
   id: number
   start: string
-  icon: string
+  icon: IconName
   title: string
   category: string
   url: string
@@ -238,7 +239,7 @@ export interface Project extends ContentType {
 export interface ProjectLink {
   label: string
   url: string
-  icon: string
+  icon: IconName
 }
 
 export const getProjectUri = (project: Project) => `/portfolio/${toSlug(project.name)}`
