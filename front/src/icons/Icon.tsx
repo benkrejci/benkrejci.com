@@ -1,6 +1,6 @@
 import { ReactElement } from 'react'
 
-import { SvgIconProps } from '@material-ui/core'
+import { SvgIconProps, withStyles } from '@material-ui/core'
 import {
   Build, Cake, Code, EmojiEmotions, Favorite, Flare, FlashOn, GitHub, Hearing, Instagram, Language,
   LinkedIn, LocalShipping, MusicNote, Pets, School, Star, Twitter, Work
@@ -32,12 +32,12 @@ const iconComponentByName = {
   drum: Drum,
   pets: Pets,
   heart: Favorite,
-  thangs: Thangs,
+  thangs: Thangs
 } as const
 
 export type IconName = keyof typeof iconComponentByName
 
-export const Icon = ({ name, ...props }: { name: IconName | string } & SvgIconProps): ReactElement => {
+export const Icon = ({ name, ...props }: { name: IconName | string } & object): ReactElement => {
   if (!(name in iconComponentByName)) {
     console?.warn && console.warn(`Unknown icon: ${name}`)
     return null

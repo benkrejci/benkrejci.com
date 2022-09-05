@@ -12,6 +12,7 @@ const socialTitlesByType: { [type: string]: string } = {
   soundcloud: 'SoundCloud',
   instagram: 'Instagram',
   github: 'GitHub',
+  thangs: 'Thangs'
 }
 
 export function Social({
