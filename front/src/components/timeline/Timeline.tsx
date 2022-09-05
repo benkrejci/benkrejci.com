@@ -1,6 +1,6 @@
 import { ReactElement, useState, useRef, useEffect } from 'react'
 
-import { alpha, Grow, Link } from '@material-ui/core'
+import { alpha, Box, Button, Grow, Link } from '@material-ui/core'
 import { ArrowDownward, ArrowUpward } from '@material-ui/icons'
 
 import { isInView } from '../../utility/isInView'
@@ -13,6 +13,7 @@ import { TimelineCategory, TimelineEvent } from './types'
 import { YearLabel } from './YearLabel'
 import { YearLine } from './YearLine'
 import { useRect } from '../../utility/useRect'
+import { StickyHeader } from './StickyHeader'
 
 interface CellDefinition {
   type: 'yearLine' | 'yearLabel' | 'event'
@@ -108,13 +109,6 @@ export const Timeline = ({
 
   const cells: ReactElement[] = []
 
-  // sort button
-  cells.push(
-    <Link className={styles.sortCell} onClick={() => setSortIsFlipping(true)} key="sort">
-      {sortIsDesc ? <ArrowDownward /> : <ArrowUpward />}
-    </Link>,
-  )
-
   // future year line
   cells.push(
     <YearLine
@@ -205,8 +199,22 @@ export const Timeline = ({
     }
   }
 
-  const stickyHeaders: ReactElement[] = []
   const [timelineInView, timelineRef] = isInView({ threshold: 0 })
+
+  // sort button
+  cells.push(
+    <StickyHeader
+      className={styles.sortCell}
+      stickyHeaderEnabled={timelineInView}
+      key="sort-button"
+    >
+      {() => (
+        <Button onClick={() => setSortIsFlipping(true)}>
+          {sortIsDesc !== sortIsFlipping ? <ArrowDownward /> : <ArrowUpward />}
+        </Button>
+      )}
+    </StickyHeader>,
+  )
 
   categories.forEach((category, categoryIndex) => {
     const gridColumnStart = 2 + categoryIndex
@@ -246,11 +254,8 @@ export const Timeline = ({
   })
 
   return (
-    <>
-      {stickyHeaders}
-      <div className={styles.container} ref={timelineRef}>
-        {cells}
-      </div>
-    </>
+    <div className={styles.container} ref={timelineRef}>
+      {cells}
+    </div>
   )
 }

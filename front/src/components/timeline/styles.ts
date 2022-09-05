@@ -10,16 +10,6 @@ export const EVENT_INTERSECTION_MARGIN = '-72px 0px 0px 0px'
 export const useTimelineStyles = makeStyles((theme) => ({
   container: {
     display: 'grid',
-    //columnGap: theme.spacing(1),
-  },
-
-  sortCell: {
-    gridRowStart: 1,
-    gridRowEnd: 'span 3',
-    gridColumnStart: 1,
-    gridColumnEnd: 'span 1',
-    justifySelf: 'center',
-    alignSelf: 'center',
   },
 
   topBufferCell: {
@@ -84,20 +74,33 @@ export const useTimelineStyles = makeStyles((theme) => ({
     flexGrow: 0,
   },
 
+  stickyHeader: {
+    position: 'fixed',
+    top: theme.spacing(1),
+    zIndex: 20,
+  },
+
   categoryCell: {
     gridColumnEnd: 'span 3',
     gridRowEnd: 'span 1',
     textAlign: 'center',
-  },
-
-  stickyHeader: {
-    position: 'fixed',
-    top: 0,
-    zIndex: 20,
-    '& .MuiTypography-root': {
+    '&$stickyHeader .MuiTypography-root': {
       display: 'inline-block',
       marginTop: -theme.spacing(1),
       paddingTop: theme.spacing(1),
+      backgroundColor: alpha(theme.palette.background.default, 0.85),
+      boxShadow: `0 0 18px 18px ${alpha(theme.palette.background.default, 0.85)}`,
+    },
+  },
+
+  sortCell: {
+    gridRowStart: 1,
+    gridRowEnd: 'span 3',
+    gridColumnStart: 1,
+    gridColumnEnd: 'span 1',
+    justifySelf: 'center',
+    alignSelf: 'self-start',
+    '&$stickyHeader': {
       backgroundColor: alpha(theme.palette.background.default, 0.85),
       boxShadow: `0 0 18px 18px ${alpha(theme.palette.background.default, 0.85)}`,
     },

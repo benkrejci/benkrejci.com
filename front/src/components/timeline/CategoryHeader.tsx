@@ -7,6 +7,7 @@ import { isInView } from '../../utility/isInView'
 import { useRect } from '../../utility/useRect'
 import { useTimelineStyles } from './styles'
 import { TimelineCategory } from './types'
+import { StickyHeader } from './StickyHeader'
 
 export const CategoryHeader = forwardRef<
   HTMLElement,
@@ -18,41 +19,17 @@ export const CategoryHeader = forwardRef<
 >(({ category, stickyHeaderEnabled, style }, outerRef): ReactElement => {
   const styles = useTimelineStyles()
 
-  // Disregard horizontal occlusion by adding arbitrarily large horizontal margin
-  // (This actually does not work in Chrome at the time of writing due to a presumed bug)
-  const [categoryInView, inViewRef] = isInView({ threshold: 1, rootMargin: '0px 2000px' })
-  const rectRef = useRef()
-  const headerRect = useRect(rectRef)
-  const tempRef = useForkRef(inViewRef, rectRef)
-  const headerRef = useForkRef(tempRef, outerRef)
-
   return (
-    <>
-      <div
-        className={styles.categoryCell}
-        style={{ color: category.color, ...style }}
-        aria-hidden
-        ref={headerRef}
-      >
+    <StickyHeader
+      className={styles.categoryCell}
+      stickyHeaderEnabled={stickyHeaderEnabled}
+      style={{ color: category.color, ...style }}
+    >
+      {() => (
         <Typography variant="h5" component="h2">
           {category.name}
         </Typography>
-      </div>
-      <div
-        className={`${styles.categoryCell} ${styles.stickyHeader}`}
-        style={{
-          display: stickyHeaderEnabled && !categoryInView ? 'block' : 'none',
-          color: category.color,
-          left: headerRect?.left,
-          width: headerRect?.width,
-          height: headerRect?.height,
-        }}
-        aria-hidden
-      >
-        <Typography variant="h5" component="h2">
-          {category.name}
-        </Typography>
-      </div>
-    </>
+      )}
+    </StickyHeader>
   )
 })
