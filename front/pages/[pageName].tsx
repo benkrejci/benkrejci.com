@@ -18,7 +18,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const pagesResponse = await getPages()
-  if (pagesResponse.error) throw pagesResponse
+  if (pagesResponse.error) throw Error(`Error getting pages: ${pagesResponse.error}`)
 
   return {
     paths: pagesResponse.data.filter((page) => page.slug !== 'home').map((page) => `/${page.slug}`),

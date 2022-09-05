@@ -141,7 +141,7 @@ export const getGlobal = async (): Promise<Response<Global>> => {
     ...response,
     data: {
       ...response.data,
-      topNav: await mapPages(response.data.topNav),
+      topNav: response.data && (await mapPages(response.data.topNav)),
     },
   }
 }
@@ -153,7 +153,7 @@ export const getPages = async (
   const response = await get<Page[]>('pages', params)
   return {
     ...response,
-    data: await mapPages(response.data),
+    data: response.data && (await mapPages(response.data)),
   }
 }
 

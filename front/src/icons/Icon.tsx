@@ -8,6 +8,7 @@ import {
 
 import Drum from './Drum'
 import Soundcloud from './Soundcloud'
+import Thangs from './Thangs'
 
 const iconComponentByName = {
   build: Build,
@@ -31,6 +32,7 @@ const iconComponentByName = {
   drum: Drum,
   pets: Pets,
   heart: Favorite,
+  thangs: Thangs,
 } as const
 
 export type IconName = keyof typeof iconComponentByName
