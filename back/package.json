@@ -13,7 +13,7 @@
   "devDependencies": {},
   "dependencies": {
     "dotenv": "^10.0.0",
-    "knex": "0.95.7",
+    "knex": "2.4.0",
     "pm2": "^5.1.0",
     "sqlite3": "5.0.2",
     "strapi": "3.6.8",
