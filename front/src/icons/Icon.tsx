@@ -2,7 +2,7 @@ import { ReactElement } from 'react'
 
 import { SvgIconProps, withStyles } from '@material-ui/core'
 import {
-  Build, Cake, Code, EmojiEmotions, Favorite, Flare, FlashOn, GitHub, Hearing, Instagram, Language,
+  Build, Cake, Code, EmojiEmotions, Favorite, Flare, FlashOn, GitHub, Hearing, Home, Instagram, Language,
   LinkedIn, LocalShipping, MusicNote, Pets, School, Star, Twitter, Work
 } from '@material-ui/icons'
 
@@ -32,7 +32,8 @@ const iconComponentByName = {
   drum: Drum,
   pets: Pets,
   heart: Favorite,
-  thangs: Thangs
+  thangs: Thangs,
+  home: Home,
 } as const
 
 export type IconName = keyof typeof iconComponentByName
