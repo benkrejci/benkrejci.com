@@ -92,7 +92,7 @@ export interface ApiPage extends ApiContentType {
   rightWidgets: ApiWidget[]
 }
 
-export const fromApiPages = (pages: ApiPage[]): ContentType<ApiPage>[] =>
+export const fromApiPages = (pages: ApiPage[]) =>
   pages.map((page) => ({
     ...fromApiContentTypeObj(page),
     bottomWidgets: fromApiWidgets(page.bottomWidgets),
@@ -228,7 +228,7 @@ const mapWidgets = (widgets: ApiWidget[]): Promise<ApiWidget[]> =>
     }),
   )
 
-const fromApiWidget = (widget: ApiWidget): ContentType<ApiWidget> => {
+const fromApiWidget = (widget: ApiWidget) => {
   switch (widget.__component) {
     case 'widget.project-list':
       return {

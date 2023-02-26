@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react'
 
 import { Box, Grid, Paper } from '@material-ui/core'
 
-import { ApiGlobal, ApiWidget } from '../../api/api'
+import { Global, Widget } from '../../api/api'
 import { WrapIf } from '../../utility/WrapIf'
 import { Media } from '../Media'
 import { ContactForm } from './ContactForm'
@@ -16,8 +16,8 @@ export function Widgets({
   global,
   children,
 }: {
-  global: ApiGlobal
-  children?: ApiWidget[]
+  global: Global
+  children?: Widget[]
 }): ReactElement {
   if (!children?.length) return null
   return (
