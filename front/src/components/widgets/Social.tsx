@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react'
 
 import { Grid, Link, makeStyles, SvgIconProps, Typography, useMediaQuery, useTheme } from '@material-ui/core'
 
-import { Social as SocialModel } from '../../api/api'
+import { ApiSocial as SocialModel } from '../../api/api'
 import { Icon, IconName } from '../../icons/Icon'
 import { ExternalLink } from '../../utility/ExternalLink'
 

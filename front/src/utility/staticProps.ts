@@ -1,9 +1,9 @@
 import { GetStaticPropsContext } from 'next'
 
-import { getGlobal, Global } from '../api/api'
+import { getGlobal, ApiGlobal } from '../api/api'
 
 export interface PageProps {
-  global: Global
+  global: ApiGlobal
   preview: boolean
 }
 

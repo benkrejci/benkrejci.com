@@ -3,10 +3,10 @@ import React, { ReactElement } from 'react'
 
 import { Box, Button, makeStyles } from '@material-ui/core'
 
-import { Page } from '../api/api'
+import { ApiPage } from '../api/api'
 import { InternalLink } from '../utility/InternalLink'
 
-export function Navigation({ pages }: { pages: Page[] }): ReactElement {
+export function Navigation({ pages }: { pages: ApiPage[] }): ReactElement {
   const router = useRouter()
   const matchingSlug = (router.asPath.charAt(0) === '/' && router.asPath.slice(1)) || 'home'
   const matchingPage = pages.find((page) => matchingSlug.startsWith(page.slug))

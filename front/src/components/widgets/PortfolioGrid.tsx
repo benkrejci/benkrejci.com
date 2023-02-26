@@ -3,10 +3,10 @@ import React, { ReactElement } from 'react'
 
 import { Box, Grid, Link, Paper } from '@material-ui/core'
 
-import { EXTERNAL_API_SERVER, getProjectUri, Project } from '../../api/api'
+import { EXTERNAL_API_SERVER, getProjectUri, ApiProject } from '../../api/api'
 import { InternalLink } from '../../utility/InternalLink'
 
-export function PortfolioGrid({ projects, ...props }: { projects: Project[] }): ReactElement {
+export function PortfolioGrid({ projects, ...props }: { projects: ApiProject[] }): ReactElement {
   return (
     <Box my={4}>
       <Grid container spacing={3}>

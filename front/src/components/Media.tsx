@@ -3,7 +3,7 @@ import React, { CSSProperties, ReactElement } from 'react'
 
 import { Grid, useTheme } from '@material-ui/core'
 
-import { EXTERNAL_API_SERVER, File, Image } from '../api/api'
+import { EXTERNAL_API_SERVER, ApiFile, Image } from '../api/api'
 
 const DIMENSION_MATCHER = /([0-9]*)([^0-9]*)/
 
@@ -17,7 +17,7 @@ export const Media = ({
   className,
   style,
 }: {
-  file: File
+  file: ApiFile
   width?: number
   height?: number
   maxWidth?: string | number

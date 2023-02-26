@@ -2,6 +2,7 @@ import axios from 'axios'
 
 import { Breakpoint } from '@material-ui/core/styles/createBreakpoints'
 import { IconName } from '../icons/Icon'
+import { Project } from '../components/widgets/Project'
 
 export interface Response<T> {
   data?: T
@@ -40,38 +41,100 @@ export async function post<T>(uri: string, data?: any): Promise<Response<T>> {
   }
 }
 
-export interface Global {
+export interface ApiGlobal {
   title: string
   socials: Social[]
-  topNav: Page[]
+  topNav: ApiPage[]
 }
+
+export const fromApiGlobal = (global: ApiGlobal) => ({
+  ...global,
+  topNav: fromApiPages(global.topNav),
+})
+
+export type Global = ReturnType<typeof fromApiGlobal>
 
 export interface Social {
   type: IconName
   url: string
 }
 
-export interface ContentType {
+export interface ApiContentType {
   id: number
-  published_at?: Date
+  published_at?: string
+  created_at: string
+  updated_at: string
+}
+
+export type ContentType<T> = T & {
+  published_at: Date
   created_at: Date
   updated_at: Date
 }
 
-export interface Page extends ContentType {
+const fromApiContentTypeObj = (obj) => ({
+  ...obj,
+  published_at: obj.published_at ? new Date(obj.published_at) : undefined,
+  created_at: obj.created_at ? new Date(obj.created_at) : undefined,
+  updated_at: obj.updated_at ? new Date(obj.updated_at) : undefined,
+})
+
+export interface ApiPage extends ApiContentType {
   title: string
   slug: string
   description?: string
   hideSocial: boolean
   hideSocialDown: Breakpoint | null
   hideSocialUp: Breakpoint | null
-  topWidgets: Widget[]
-  bottomWidgets: Widget[]
-  leftWidgets: Widget[]
-  rightWidgets: Widget[]
+  topWidgets: ApiWidget[]
+  bottomWidgets: ApiWidget[]
+  leftWidgets: ApiWidget[]
+  rightWidgets: ApiWidget[]
 }
 
-export type Widget =
+export const fromApiPages = (pages: ApiPage[]): ContentType<ApiPage>[] =>
+  pages.map((page) => ({
+    ...fromApiContentTypeObj(page),
+    bottomWidgets: fromApiWidgets(page.bottomWidgets),
+    leftWidgets: fromApiWidgets(page.leftWidgets),
+    rightWidgets: fromApiWidgets(page.rightWidgets),
+    topWidgets: fromApiWidgets(page.topWidgets),
+  }))
+
+export type Page = ReturnType<typeof fromApiPages>
+
+export const getPage = async (
+  params: { id: number } | { name: string },
+): Promise<Response<ApiPage>> => {
+  const response = await getPages(params)
+  return { data: response.data[0], error: response.error }
+}
+
+export const getPages = async (
+  params?: any,
+  preview: boolean = false,
+): Promise<Response<ApiPage[]>> => {
+  const response = await get<ApiPage[]>('pages', params)
+  return {
+    ...response,
+    data: response.data && (await mapPages(response.data)),
+  }
+}
+
+const mapPages = (pages: ApiPage[]): Promise<ApiPage[]> =>
+  Promise.all(
+    pages.map(
+      async (page): Promise<ApiPage> => ({
+        ...page,
+        topWidgets: await mapWidgets(page.topWidgets),
+        bottomWidgets: await mapWidgets(page.bottomWidgets),
+        leftWidgets: await mapWidgets(page.leftWidgets),
+        rightWidgets: await mapWidgets(page.rightWidgets),
+      }),
+    ),
+  )
+
+export type ApiWidget =
   | ProjectGridWidget
   | ProjectListWidget
   | RichTextWidget
@@ -83,13 +146,13 @@ export type Widget =
 export interface ProjectGridWidget {
   __component: 'widget.project-grid'
   id: number
-  projects: Project[]
+  projects: ApiProject[]
 }
 
 export interface ProjectListWidget {
   __component: 'widget.project-list'
   id: number
-  projects: Project[]
+  projects: ApiProject[]
 }
 
 export interface RichTextWidget {
@@ -109,7 +172,7 @@ export interface SocialWidget {
 export interface ImageWidget {
   __component: 'widget.image'
   id: number
-  image: File
+  image: ApiFile
   align: 'left' | 'center' | 'right'
 }
 
@@ -135,8 +198,8 @@ export interface TimelineEvent {
   description: string
 }
 
-export const getGlobal = async (): Promise<Response<Global>> => {
-  const response = await get<Global>('global')
+export const getGlobal = async (): Promise<Response<ApiGlobal>> => {
+  const response = await get<ApiGlobal>('global')
   return {
     ...response,
     data: {
@@ -146,31 +209,7 @@ export const getGlobal = async (): Promise<Response<Global>> => {
   }
 }
 
-export const getPages = async (
-  params?: any,
-  preview: boolean = false,
-): Promise<Response<Page[]>> => {
-  const response = await get<Page[]>('pages', params)
-  return {
-    ...response,
-    data: response.data && (await mapPages(response.data)),
-  }
-}
-
-const mapPages = (pages: Page[]): Promise<Page[]> =>
-  Promise.all(
-    pages.map(
-      async (page): Promise<Page> => ({
-        ...page,
-        topWidgets: await mapWidgets(page.topWidgets),
-        bottomWidgets: await mapWidgets(page.bottomWidgets),
-        leftWidgets: await mapWidgets(page.leftWidgets),
-        rightWidgets: await mapWidgets(page.rightWidgets),
-      }),
-    ),
-  )
-
-const mapWidgets = (widgets: Widget[]): Promise<Widget[]> =>
+const mapWidgets = (widgets: ApiWidget[]): Promise<ApiWidget[]> =>
   Promise.all(
     widgets.map(async (widget) => {
       switch (widget.__component) {
@@ -189,12 +228,21 @@ const mapWidgets = (widgets: Widget[]): Promise<Widget[]> =>
     }),
   )
 
-export const getPage = async (
-  params: { id: number } | { name: string },
-): Promise<Response<Page>> => {
-  const response = await getPages(params)
-  return { data: response.data[0], error: response.error }
+const fromApiWidget = (widget: ApiWidget): ContentType<ApiWidget> => {
+  switch (widget.__component) {
+    case 'widget.project-list':
+      return {
+        ...fromApiContentTypeObj(widget),
+        projects: widget.projects.map((project) => fromApiContentTypeObj(project)),
+      }
+    default:
+      return fromApiContentTypeObj(widget)
+  }
 }
+
+const fromApiWidgets = (widgets: ApiWidget[]) => widgets.map(fromApiWidget)
+
+export type Widget = ReturnType<typeof fromApiWidget>
 
 export interface Image {
   caption: string
@@ -215,7 +263,7 @@ export interface Image {
   }
 }
 
-export type File = ContentType &
+export type ApiFile = ApiContentType &
   Partial<Image> & {
     name: string
     alternativeText: string
@@ -228,13 +276,17 @@ export type File = ContentType &
     provider: 'local'
   }
 
-export interface Project extends ContentType {
+export type File = ContentType<ApiFile>
+
+export interface ApiProject extends ApiContentType {
   name: string
   url: string
   description: string
-  cover: File
+  cover: ApiFile
   links?: ProjectLink[]
 }
+
+export type Project = ContentType<ApiProject>
 
 export interface ProjectLink {
   label: string
@@ -242,14 +294,14 @@ export interface ProjectLink {
   icon: IconName
 }
 
-export const getProjectUri = (project: Project) => `/portfolio/${toSlug(project.name)}`
+export const getProjectUri = (project: ApiProject) => `/portfolio/${toSlug(project.name)}`
 
-export const getProjects = async (params?: any): Promise<Response<Project[]>> =>
-  get('projects', { ...params })
+export const getProjects = (params?: any): Promise<Response<ApiProject[]>> =>
+  get<ApiProject[]>('projects', { ...params })
 
 export const getProject = async (
   params: { id: number } | { name: string },
-): Promise<Response<Project>> => {
+): Promise<Response<ApiProject>> => {
   const response = await getProjects(params)
   return { data: response.data[0], error: response.error }
 }

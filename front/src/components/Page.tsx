@@ -7,7 +7,7 @@ import Box from '@material-ui/core/Box'
 import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography'
 
-import { Global } from '../api/api'
+import { fromApiGlobal, ApiGlobal } from '../api/api'
 import { InternalLink } from '../utility/InternalLink'
 import { Navigation } from './Navigation'
 import { Social } from './widgets/Social'
@@ -15,7 +15,7 @@ import { Widgets } from './widgets/Widgets'
 import { PreviewModeBar } from './PreviewModeBar'
 
 export function Page({
-  global,
+  global: apiGlobal,
   preview,
   title,
   description,
@@ -23,7 +23,7 @@ export function Page({
   footer,
   children,
 }: {
-  global: Global
+  global: ApiGlobal
   preview: boolean
   title?: string
   description?: string
@@ -31,6 +31,7 @@ export function Page({
   footer?: ReactElement
   children?: ReactNode
 }): ReactElement {
+  const global = fromApiGlobal(apiGlobal)
   const router = useRouter()
   const matchingSlug =
     (router.pathname.charAt(0) === '/' && router.query.pageName) || 'home'

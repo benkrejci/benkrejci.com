@@ -56,6 +56,10 @@ export const Project = ({ project }: { project: ProjectModel }): ReactElement =>
               {project.name} <FragmentLink text={project.name} type="link" />
             </Typography>
 
+            <Typography variant="subtitle2">
+              Published {project.created_at.toLocaleDateString()}
+            </Typography>
+
             <List className={styles.list}>
               {project.links?.map((link) => (
                 <ListItem

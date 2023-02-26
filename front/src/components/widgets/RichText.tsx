@@ -41,8 +41,14 @@ const styles = (theme) => ({
 
 const DEFAULT_OPTIONS = {
   overrides: {
-    h1: { component: Typography, props: { component: 'h1', variant: 'h3', gutterBottom: true } },
-    h2: { component: Typography, props: { component: 'h2', variant: 'h4', gutterBottom: true } },
+    h1: {
+      component: Typography,
+      props: { component: 'h1', variant: 'h3', gutterBottom: true },
+    },
+    h2: {
+      component: Typography,
+      props: { component: 'h2', variant: 'h4', gutterBottom: true },
+    },
     h3: { component: Typography, props: { component: 'h3', variant: 'h5' } },
     h4: {
       component: Typography,
@@ -56,11 +62,13 @@ const DEFAULT_OPTIONS = {
     a: { component: Link, props: { target: '_blank' } },
     img: {
       component: ({ src, ...props }) => (
-        <img
-          src={`${EXTERNAL_API_SERVER}/${src}`}
-          {...props}
-          style={{ width: '100%', maxHeight: '360px', maxWidth: '360px' }}
-        />
+        <Link href={src} target="_blank">
+          <img
+            src={`${EXTERNAL_API_SERVER}/${src}`}
+            {...props}
+            style={{ width: '100%', maxHeight: '40vh', maxWidth: '40vw' }}
+          />
+        </Link>
       ),
     },
     li: {
