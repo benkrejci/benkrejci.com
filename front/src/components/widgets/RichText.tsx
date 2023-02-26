@@ -66,7 +66,7 @@ const DEFAULT_OPTIONS = {
           <img
             src={`${EXTERNAL_API_SERVER}/${src}`}
             {...props}
-            style={{ width: '100%', maxHeight: '40vh', maxWidth: '40vw' }}
+            style={{ width: '100%' }}
           />
         </Link>
       ),
