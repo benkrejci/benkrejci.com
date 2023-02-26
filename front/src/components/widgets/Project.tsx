@@ -29,7 +29,7 @@ export const Project = ({ project }: { project: ProjectModel }): ReactElement =>
       <Paper elevation={1}>
         <Box p={4} className={styles.container}>
           <div className={styles.title}>
-            <Typography variant="h3" gutterBottom>
+            <Typography variant="h2" gutterBottom>
               {project.name} <FragmentLink text={project.name} type="link" />
             </Typography>
 
@@ -82,7 +82,7 @@ export const Project = ({ project }: { project: ProjectModel }): ReactElement =>
           </div>
 
           <div className={styles.description}>
-            <RichText>{project.description}</RichText>
+            <RichText topHeadingLevel={3}>{project.description}</RichText>
           </div>
         </Box>
       </Paper>
