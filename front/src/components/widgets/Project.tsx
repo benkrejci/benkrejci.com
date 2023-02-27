@@ -29,11 +29,11 @@ export const Project = ({ project }: { project: ProjectModel }): ReactElement =>
       <Paper elevation={1}>
         <Box p={4} className={styles.container}>
           <div className={styles.title}>
-            <Typography variant="h2" gutterBottom>
+            <Typography variant="h2">
               {project.name} <FragmentLink text={project.name} type="link" />
             </Typography>
 
-            <Typography variant="subtitle2">
+            <Typography variant="subtitle1" className={styles.subtitle}>
               {project.created_at.toLocaleDateString()}
             </Typography>
 
@@ -103,6 +103,9 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     width: '100%',
+  },
+  subtitle: {
+    marginBottom: theme.spacing(3),
   },
   cover: {
     width: '100%',
