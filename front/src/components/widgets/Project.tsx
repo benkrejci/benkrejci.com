@@ -34,7 +34,7 @@ export const Project = ({ project }: { project: ProjectModel }): ReactElement =>
             </Typography>
 
             <Typography variant="subtitle2">
-              Published {project.created_at.toLocaleDateString()}
+              {project.created_at.toLocaleDateString()}
             </Typography>
 
             {project.cover ? (
