@@ -8,7 +8,8 @@ import { InternalLink } from '../utility/InternalLink'
 
 export function Navigation({ pages }: { pages: ApiPage[] }): ReactElement {
   const router = useRouter()
-  const matchingSlug = (router.asPath.charAt(0) === '/' && router.asPath.slice(1)) || 'home'
+  const matchingSlug =
+    (router.asPath.charAt(0) === '/' && router.asPath.match(/\/([^?]*)/)[1]) || 'home'
   const matchingPage = pages.find((page) => matchingSlug.startsWith(page.slug))
   const matchingPageIndex = pages.indexOf(matchingPage)
   const styles = useStyles()
