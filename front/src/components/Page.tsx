@@ -34,7 +34,7 @@ export function Page({
   const global = fromApiGlobal(apiGlobal)
   const router = useRouter()
   const matchingSlug =
-    (router.pathname.charAt(0) === '/' && router.query.pageName) || 'home'
+    (router.asPath.charAt(0) === '/' && router.asPath.match(/\/([^?]*)/)[1]) || 'home'
   const currentPage = global.topNav.find((page) => matchingSlug === page.slug)
 
   title = title || currentPage?.title || ''
