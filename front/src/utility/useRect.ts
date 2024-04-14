@@ -1,5 +1,5 @@
 // source: https://gist.github.com/morajabi/523d7a642d8c0a2f71fcfa0d8b3d2846
-import { useCallback, useLayoutEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 type RectResult = {
   bottom: number
@@ -33,7 +33,7 @@ export function useRect<T extends HTMLElement>(ref: React.RefObject<T>): RectRes
     setRect(getRect(ref.current)) // Update client rect
   }, [ref])
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const element = ref.current
     if (!element) return
 
