@@ -4,6 +4,7 @@ import React, { ReactElement } from 'react'
 import { Link, Typography, withStyles } from '@material-ui/core'
 
 import { EXTERNAL_API_SERVER } from '../../api/api'
+import { Image } from '../Image'
 
 export function RichText({
   content,
@@ -34,6 +35,12 @@ export function RichText({
 }
 
 const styles = (theme) => ({
+  image: {
+    display: 'inline-block',
+    maxWidth: '100%',
+    maxHeight: '40vh',
+    margin: theme.spacing(1),
+  },
   listItem: {
     marginTop: theme.spacing(1),
   },
@@ -61,15 +68,16 @@ const DEFAULT_OPTIONS = {
     p: { component: Typography, props: { paragraph: true } },
     a: { component: Link, props: { target: '_blank' } },
     img: {
-      component: ({ src, ...props }) => (
+      // @ts-ignore MUI TS bug
+      component: withStyles(styles)(({ classes, src, ...props }) => (
         <Link href={src} target="_blank">
-          <img
+          <Image
             src={`${EXTERNAL_API_SERVER}/${src}`}
             {...props}
-            style={{ width: '100%' }}
+            className={classes.image}
           />
         </Link>
-      ),
+      )),
     },
     li: {
       // @ts-ignore MUI TS bug

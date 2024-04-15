@@ -1,9 +1,9 @@
-import MaterialImage from 'material-ui-image'
+import { Image } from './Image'
 import React, { CSSProperties, ReactElement } from 'react'
 
-import { Grid, useTheme } from '@material-ui/core'
+import { Box, Grid, makeStyles, useTheme } from '@material-ui/core'
 
-import { EXTERNAL_API_SERVER, ApiFile, Image } from '../api/api'
+import { EXTERNAL_API_SERVER, ApiFile } from '../api/api'
 
 const DIMENSION_MATCHER = /([0-9]*)([^0-9]*)/
 
@@ -11,8 +11,8 @@ export const Media = ({
   file,
   width,
   height,
-  maxWidth,
-  maxHeight = '50vh',
+  maxWidth = '100%',
+  maxHeight = '40vh',
   align = 'center',
   className,
   style,
@@ -27,6 +27,7 @@ export const Media = ({
   style?: CSSProperties
 }): ReactElement => {
   const theme = useTheme()
+  const styles = useStyles()
 
   const src = `${EXTERNAL_API_SERVER}/${file.url}`
   const type = file.mime.match(/^[^/]*/)[0]
@@ -62,25 +63,27 @@ export const Media = ({
       className={className}
       style={{ backgroundColor: theme.palette.background.paper, ...style }}
     >
-      <Grid item xs style={{ maxWidth, maxHeight }}>
-        {type === 'image' ? (
-          <MaterialImage
-            src={src}
-            aspectRatio={aspectRatio}
-            width={file.width}
-            height={file.height}
-            color={theme.palette.background.default}
-          />
-        ) : type === 'video' ? (
-          <video controls loop style={{ width: '100%', height: '100%' }}>
-            <source src={src} type={file.mime} />
-          </video>
-        ) : (
-          () => {
-            throw Error(`Unknown media type ${type} for file ${src}`)
-          }
-        )}
-      </Grid>
+        <>
+          {type === 'image' ? (
+            <Image src={src} alt={file.alternativeText} className={styles.image} style={{ aspectRatio, maxWidth, maxHeight }} />
+          ) : type === 'video' ? (
+            <video controls loop style={{ aspectRatio, width, height, maxWidth, maxHeight }}>
+              <source src={src} type={file.mime} />
+            </video>
+          ) : (
+            () => {
+              throw Error(`Unknown media type ${type} for file ${src}`)
+            }
+          )}
+        </>
     </Grid>
   )
 }
+
+const useStyles = makeStyles((theme) => ({
+  image: {
+    display: 'block',
+    maxWidth: '100%',
+    maxHeight: '100%',
+  },
+}))

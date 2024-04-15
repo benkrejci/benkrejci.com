@@ -50,7 +50,7 @@ export const Project = ({ project }: { project: ProjectModel }): ReactElement =>
                   >
                     <Media
                       file={project.cover}
-                      maxHeight="60vh"
+                      maxHeight="40vh"
                       style={{ backgroundColor: 'transparent' }}
                     />
                   </WrapIf>
