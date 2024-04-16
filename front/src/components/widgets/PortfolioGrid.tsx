@@ -1,10 +1,10 @@
-import Image from 'material-ui-image'
 import React, { ReactElement } from 'react'
 
 import { Box, Grid, Link, Paper } from '@material-ui/core'
 
 import { EXTERNAL_API_SERVER, getProjectUri, ApiProject } from '../../api/api'
 import { InternalLink } from '../../utility/InternalLink'
+import { Image } from '../Image'
 
 export function PortfolioGrid({ projects, ...props }: { projects: ApiProject[] }): ReactElement {
   return (

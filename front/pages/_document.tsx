@@ -1,4 +1,5 @@
-import Document, { Head, Html, Main, NextScript } from 'next/document'
+import Document, { Main, Html, Head } from 'next/document'
+import NextScript from 'next/script'
 /* basically copied from https://github.com/mui-org/material-ui/blob/master/examples/nextjs/pages/_document.js */
 import React from 'react'
 
